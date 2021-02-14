@@ -1,0 +1,3 @@
+adc.c:37:6:adc_init	8	static
+adc.c:72:9:adc_get_bat_voltage	8	static
+adc.c:123:7:get_bat_voltage	4	static

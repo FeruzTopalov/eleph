@@ -1,0 +1,15 @@
+lrns.c:80:6:init_lrns	16	static
+lrns.c:109:6:set_device_flags	24	static
+lrns.c:145:9:get_device_flags	24	static
+lrns.c:179:9:check_alarms	16	static
+lrns.c:205:6:calc_timeout	24	static
+lrns.c:219:9:check_timeout	16	static
+lrns.c:254:9:check_fence	16	static
+lrns.c:286:6:process_all_devices	16	static
+lrns.c:300:6:gps_air_update_my_data	24	static
+lrns.c:343:6:fill_air_packet_with_struct_data	4	static
+lrns.c:367:9:fill_struct_with_air_packet_data	24	static
+lrns.c:399:6:calc_relative_position	88	static
+lrns.c:459:25:get_gps_air	16	static
+lrns.c:471:25:get_gps_rel	16	static
+lrns.c:483:25:get_dev_aux	16	static
