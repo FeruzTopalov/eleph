@@ -11,9 +11,9 @@ In other words the schematic only shows the correct way to make connections. The
 ## PCB
 Due to the reasons mentioned above there is no PCB design for the project. Currently Eleph looks like shown below:
 
-<center>Overview</center> | <center>Top</center> | <center>Bottom</center>
+Overview | Top | Bottom
 ------- | ------- | -------
-![Overview](/Pictures/PCB_top.jpg) | ![Top](/Pictures/PCB_top_isometric.jpg) | ![Bottom](/Pictures/PCB_bottom_isometric.jpg)
+![Overview](Pictures/PCB_top.jpg) | ![Top](Pictures/PCB_top_isometric.jpg) | ![Bottom](Pictures/PCB_bottom_isometric.jpg)
 
 ## Hardware
 As you can see from the schematic, supply voltage VCC is 3.3V. Please make shure that all your modules have the same supply voltage and appropriate IO logic levels.
