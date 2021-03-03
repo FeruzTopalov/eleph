@@ -1,0 +1,4 @@
+spi.c:16:6:spi1_init	4	static
+spi.c:34:6:spi2_init	4	static
+spi.c:49:9:spi1_trx	16	static
+spi.c:61:9:spi2_trx	16	static

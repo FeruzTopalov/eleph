@@ -1,0 +1,6 @@
+settings.c:78:10:get_send_interval_values	4	static
+settings.c:85:10:get_tx_power_values	4	static
+settings.c:92:25:get_settings	4	static
+settings.c:99:6:settings_load	16	static
+settings.c:126:6:settings_save_default	16	static
+settings.c:152:6:settings_save	24	static

@@ -1,0 +1,6 @@
+core_cm3.h:1502:22:NVIC_EnableIRQ	16	static
+uart.c:23:6:uart_dma_init	8	static
+uart.c:52:6:uart_dma_stop	4	static
+uart.c:60:6:uart_dma_restart	4	static
+uart.c:69:6:backup_and_clear_uart_buffer	16	static
+uart.c:81:6:uart_tx	16	static
