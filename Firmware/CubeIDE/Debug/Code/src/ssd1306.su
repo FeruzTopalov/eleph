@@ -1,0 +1,13 @@
+ssd1306.c:44:6:ssd1306_init	16	static
+ssd1306.c:77:6:ssd1306_update	16	static
+ssd1306.c:91:6:ssd1306_fill	16	static
+ssd1306.c:102:6:ssd1306_clear	16	static
+ssd1306.c:113:6:ssd1306_pixel	16	static
+ssd1306.c:132:6:ssd1306_pos	16	static
+ssd1306.c:140:6:ssd1306_char	24	static
+ssd1306.c:161:6:ssd1306_char_pos	24	static
+ssd1306.c:170:6:ssd1306_print	16	static
+ssd1306.c:183:6:ssd1306_print_viceversa	24	static
+ssd1306.c:206:6:ssd1306_print_next	16	static
+ssd1306.c:217:6:ssd1306_bitmap	24	static
+ssd1306.c:228:6:ssd1306_print_byte	16	static

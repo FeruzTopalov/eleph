@@ -1,0 +1,15 @@
+core_cm3.h:1502:22:NVIC_EnableIRQ	16	static
+timer.c:30:6:timers_init	8	static
+timer.c:40:6:make_a_beep	8	static
+timer.c:53:6:toggle_mute	4	static
+timer.c:60:9:get_mute_flag	4	static
+timer.c:68:6:systick_init	4	static
+timer.c:80:6:timer1_init	8	static
+timer.c:96:6:timer1_start	4	static
+timer.c:104:6:timer1_stop_reload	4	static
+timer.c:113:6:timer2_init	8	static
+timer.c:126:6:timer2_stop	4	static
+timer.c:133:6:timer2_start	4	static
+timer.c:141:6:timer3_init	4	static
+timer.c:155:6:timer3_stop	4	static
+timer.c:163:6:timer3_start	4	static

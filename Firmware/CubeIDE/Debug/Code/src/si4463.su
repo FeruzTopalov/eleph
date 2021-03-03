@@ -1,0 +1,9 @@
+si4463.c:77:6:si4463_init	384	static
+si4463.c:119:6:si4463_wait_cts	4	static
+si4463.c:127:6:si4463_set_packet_len	16	static
+si4463.c:142:6:si4463_set_tx_power	16	static
+si4463.c:157:6:si4463_tx_packet	16	static
+si4463.c:190:6:si4463_start_rx	8	static
+si4463.c:208:9:si4463_get_rx_packet	24	static
+si4463.c:265:10:get_air_packet_tx	4	static
+si4463.c:272:10:get_air_packet_rx	4	static

@@ -1,0 +1,7 @@
+points.c:73:29:get_memory_slot	16	static
+points.c:85:6:init_points	16	static
+points.c:101:6:read_memory_slots	16	static
+points.c:137:6:save_memory_point	16	static
+points.c:176:6:load_memory_point	32	static
+points.c:213:6:delete_memory_point	16	static
+points.c:221:6:clear_point_buffer	16	static
