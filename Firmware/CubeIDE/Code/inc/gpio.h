@@ -7,6 +7,13 @@
     file: gpio.h
 */
 
+
+
+#ifndef GPIO_HEADER
+#define GPIO_HEADER
+
+
+
 void gpio_init(void);
 void ext_int_init(void);
 
@@ -34,3 +41,7 @@ void cs_ssd1306_inactive(void);
 
 void bat_mon_on(void);
 void bat_mon_off(void);
+
+
+
+#endif /*GPIO_HEADER*/

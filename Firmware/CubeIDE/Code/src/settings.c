@@ -14,7 +14,6 @@
 #include "si4463.h"
 
 
-
 #define SEND_INTERVAL_1S_VALUE		(1)
 #define SEND_INTERVAL_5S_VALUE		(5)
 #define SEND_INTERVAL_10S_VALUE		(10)
@@ -44,7 +43,6 @@
 #define EEPROM_SETTINGS_PAGE_ADDRESS    (0)
 
 
-
 //positions:
 #define SETTINGS_INIT_FLAG_POS          	(0)
 #define SETTINGS_DEVICE_NUMBER_POS      	(1)
@@ -72,7 +70,6 @@ uint8_t settings_array[M24C64_PAGE_SIZE];
 struct settings_struct settings;
 uint8_t send_interval_values[] = SEND_INTERVAL_VALUES_ARRAY;
 uint8_t tx_power_values[] = TX_POWER_VALUES_ARRAY;
-
 
 
 uint8_t *get_send_interval_values(void)

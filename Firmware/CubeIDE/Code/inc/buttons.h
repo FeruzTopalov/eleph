@@ -7,6 +7,13 @@
     file: buttons.h
 */
 
+
+
+#ifndef BUTTONS_HEADER
+#define BUTTONS_HEADER
+
+
+
 #define BTN_NO_ACTION        (0)
 
 #define BTN_UP               (1)     //PA1
@@ -27,3 +34,7 @@
 
 
 uint8_t scan_buttons(void);
+
+
+
+#endif /*BUTTONS_HEADER*/

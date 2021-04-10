@@ -7,6 +7,13 @@
     file: settings.h
 */
 
+
+
+#ifndef SETTINGS_HEADER
+#define SETTINGS_HEADER
+
+
+
 #define DEVICE_ID_LEN       		(2)         //length of device ID, two ASCII characters
 #define TIMEOUT_ALARM_DISABLED		(0)
 #define FENCE_ALARM_DISABLED		(0)
@@ -65,3 +72,7 @@ uint8_t *get_tx_power_values(void);
 void settings_save_default(void);
 void settings_load(void);
 void settings_save(struct settings_struct *settings);
+
+
+
+#endif /*SETTINGS_HEADER*/

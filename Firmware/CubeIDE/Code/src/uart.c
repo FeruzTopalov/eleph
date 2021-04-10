@@ -18,13 +18,12 @@ char uart_buffer[UART_BUF_LEN];
 char *backup_buf;
 
 
-
 //UART Init
 void uart_dma_init(void)
 {
     RCC->APB2ENR |= RCC_APB2ENR_USART1EN;   //ENABLE usart clock
     
-    USART1->BRR = 0x1D4C;                   //9600 bod
+    USART1->BRR = 0x0138;                   //9600 bod; mantissa 19, frac 8
     USART1->CR1 |= USART_CR1_TE;            //enable tx
     USART1->CR1 |= USART_CR1_RE;            //enable rx
     USART1->CR1 |= USART_CR1_UE;            //uart enable
@@ -60,6 +59,8 @@ void uart_dma_stop(void)
 void uart_dma_restart(void)
 {
     DMA1_Channel5->CNDTR = UART_BUF_LEN;    //reload bytes amount to receive
+    (void)USART1->SR;						//clear ORE bit due to UART overrun occured between DMA operations
+    (void)USART1->DR;
     DMA1_Channel5->CCR |= DMA_CCR5_EN;      //enable channel
 }
 
@@ -71,6 +72,16 @@ void backup_and_clear_uart_buffer(void)
 	for (uint16_t i = 0; i < UART_BUF_LEN; i++)     //copy received data to buffer and clear uart_buffer
 	{
 		backup_buf[i] = uart_buffer[i];
+		uart_buffer[i] = 0;
+	}
+}
+
+
+
+void clear_uart_buffer(void)
+{
+	for (uint16_t i = 0; i < UART_BUF_LEN; i++)
+	{
 		uart_buffer[i] = 0;
 	}
 }

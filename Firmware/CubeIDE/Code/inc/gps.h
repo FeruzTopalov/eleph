@@ -7,6 +7,13 @@
     file: gps.h
 */
 
+
+
+#ifndef GPS_HEADER
+#define GPS_HEADER
+
+
+
 #define GPS_DATA_INVALID    (0)
 #define GPS_DATA_VALID      (1)
 #define GPS_POSITION_NOFIX  (1)
@@ -77,3 +84,7 @@ char *get_nmea_buf(void);
 struct gps_raw_struct *get_gps_raw(void);
 struct gps_num_struct *get_gps_num(void);
 uint8_t get_gps_status(void);
+
+
+
+#endif /*GPS_HEADER*/

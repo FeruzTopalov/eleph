@@ -7,6 +7,13 @@
     file: points.h
 */
 
+
+
+#ifndef POINTS_HEADER
+#define POINTS_HEADER
+
+
+
 #define MEMORY_POINT_NAME_LENGTH   (5) //excluding string-end symbol \0
 #define MEMORY_SLOTS_TOTAL	(5)
 
@@ -28,3 +35,7 @@ struct memory_slot_struct
     char point_name[MEMORY_POINT_NAME_LENGTH + 1];	//user-defined point name in the slot
     char save_date[sizeof("ddmmyy")];				//point save date
 };
+
+
+
+#endif /*POINTS_HEADER*/

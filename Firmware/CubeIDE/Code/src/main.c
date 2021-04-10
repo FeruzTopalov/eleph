@@ -7,6 +7,8 @@
     file: main.c
 */
 
+
+
 #include <string.h>
 #include "stm32f10x.h"
 #include "main.h"
@@ -39,7 +41,7 @@ uint8_t time_slot = 0;
 
 
 //MAIN
-struct main_flags_struct main_flags = {0, 0, 0, 0, 0, 0};
+struct main_flags_struct main_flags = {0};
 struct settings_struct *p_settings;
 struct gps_num_struct *p_gps_num;
 uint8_t *p_send_interval_values;
@@ -60,7 +62,7 @@ int main(void)
     si4463_init();
     ext_int_init();
     adc_init();
-    adc_get_bat_voltage();
+    adc_start_bat_voltage_reading();
     init_lrns();
     init_menu();
     init_points();
@@ -71,7 +73,7 @@ int main(void)
 
     ssd1306_bitmap(&startup_screen[0]);
     ssd1306_update();
-    delay_cyc(5000000);
+    delay_cyc(200000);
     draw_current_menu();
 
     __enable_irq();
@@ -80,9 +82,14 @@ int main(void)
     while (1)
     {
     	//Scan Keys
-        change_menu(scan_buttons());
-        
-        
+    	if (main_flags.begin_scan_buttons == 1)
+    	{
+    		main_flags.begin_scan_buttons = 0;
+    		change_menu(scan_buttons());
+    	}
+
+
+
         //Parse GPS after PPS interrupt or UART DMA overflow
         if (main_flags.gps_ready == 1)
         {
@@ -96,22 +103,24 @@ int main(void)
                     if (get_gps_status() == GPS_DATA_VALID)
                     {
                         gps_air_update_my_data(uptime);
-                        fill_air_packet_with_struct_data();    	//fill air data with coordinates of this device (this occur before first time slot interrupt)
+                        fill_air_packet_with_struct_data();    //fill air data with coordinates of this device (this occur before first time slot interrupt)
                     }
-                    else                            			//if PPS exist but data is invalid (rare situation)
+                    else                            //if PPS exist but data is invalid (rare situation)
                     {
-                        timer1_stop_reload();       			//stop time slot timer due to nothing to transmitt
+                        timer1_stop_reload();       //stop time slot timer due to nothing to transmitt
                     }
                 }
-                
-                draw_current_menu();
+
+                main_flags.do_screen_update = 1;
+
             }
             else if (main_flags.gps_sync == 1)
             {
-            	timer1_stop_reload();       					//stop time slot timer due to nothing to transmitt
+            	timer1_stop_reload();       //stop time slot timer due to nothing to transmitt
             }
         }
-        
+
+
         
         //Extract received packet
         if (main_flags.rx_ready == 1)
@@ -120,53 +129,98 @@ int main(void)
             
             if (si4463_get_rx_packet())
             {
-            	fill_struct_with_air_packet_data(uptime);   	//parse air data from another device (which has ended TX in the current time_slot)
+            	fill_struct_with_air_packet_data(uptime);   //parse air data from another device (which has ended TX in the current time_slot)
             }
         }
-        
+
+
+
+        //After each second
+        if (main_flags.tick_1s == 1)
+        {
+        	main_flags.tick_1s = 0;
+            adc_check_bat_voltage();
+            calc_timeout(uptime);	//always calculate timeout for each device, even if this function is disabled
+            check_timeout(); 		//also check timeout in order to set/reset timeout flags
+        }
+
+
         
         //Checks after receiving packets from all devices; performing beep
         if (main_flags.time_slots_end == 1)
         {
         	main_flags.time_slots_end = 0;
 
-        	process_all_devices();								//calculate relative position for each active device
+        	process_all_devices();	//calculate relative position for each active device
 
         	uint8_t any_alarm_status = 0;
         	any_alarm_status += check_alarms();
-        	any_alarm_status += check_timeout();				//check timeout flags and get the result only after the end of the TRX sequence
+        	any_alarm_status += check_timeout();	//check timeout flags and get the result only after the end of the TRX sequence
         	any_alarm_status += check_fence();
+
+        	if (main_flags.battery_low == 1)	//when GPS is good and we are in the active state then check battery here
+        	{
+        		any_alarm_status += main_flags.battery_low;
+        		main_flags.battery_low = 0;
+        	}
 
         	if (any_alarm_status > 0)
         	{
-        		make_a_beep();
+        		main_flags.do_beep = 1;
         	}
 
+        	main_flags.do_screen_update = 1;
         }
-        else if ((main_flags.battery_low == 1) && (main_flags.gps_sync == 0))	//else check battery low flag
+        else if ((main_flags.battery_low == 1) && (main_flags.gps_sync == 0)) 		//Check battery here when no GPS PPS (once in GET_BAT_VOLTAGE_INTERVAL)
         {
-        	make_a_beep();
         	main_flags.battery_low = 0;
+        	main_flags.do_beep = 1;
         }
+
+
+
+        //Make some noise
+        if (main_flags.do_beep == 1)
+        {
+        	main_flags.do_beep = 0;
+        	make_a_beep();
+        }
+
+
+
+        //Finally update screen
+        if (main_flags.do_screen_update == 1)
+        {
+        	main_flags.do_screen_update = 0;
+        	draw_current_menu();
+        }
+
+
+
+    //Wait for interrupt
+    __WFI();
 
     }
 }
 
 
 
-
-
 //DMA UART RX overflow
 void DMA1_Channel5_IRQHandler(void)
 {
-    DMA1->IFCR = DMA_IFCR_CGIF5;               	//clear all interrupt flags for DMA channel 5
+    DMA1->IFCR = DMA_IFCR_CGIF5;     //clear all interrupt flags for DMA channel 5
     
     uart_dma_stop();
     backup_and_clear_uart_buffer();
     uart_dma_restart();
     
+    if (main_flags.gps_sync == 1) 	//if last pps status was "sync" then make a beep because we lost PPS
+    {
+    	main_flags.do_beep = 1;		//make a beep
+    }
+
     main_flags.gps_ready = 1;
-    main_flags.gps_sync = 0;   					//no pps signal
+    main_flags.gps_sync = 0;   	//no pps signal
     pps_counter = 0;
     led_green_off();
 }
@@ -176,35 +230,35 @@ void DMA1_Channel5_IRQHandler(void)
 //GPS PPS interrupt
 void EXTI15_10_IRQHandler(void)
 {
-	EXTI->PR = EXTI_PR_PR11;        			//clear interrupt
-	timer1_start();                 			//the first thing to do is start time slot timer right after PPS
+	EXTI->PR = EXTI_PR_PR11;        //clear interrupt
+	timer1_start();                 //the first thing to do is start time slot timer right after PPS
 
-	uart_dma_stop();							//fix the data
+	uart_dma_stop();				//fix the data
 	backup_and_clear_uart_buffer();
 	uart_dma_restart();
 
 	pps_counter++;
 	switch (pps_counter)
 	{
-		case 1:									//skip first PPS, ignore previous nmea data
+		case 1:							//skip first PPS, ignore previous nmea data
 			timer1_stop_reload();
 			main_flags.gps_ready = 0;
 			main_flags.gps_sync = 0;
 			break;
 
-		case 2:									//skip second PPS, but fix the nmea data acquired after first PPS
+		case 2:							//skip second PPS, but fix the nmea data acquired after first PPS
 			timer1_stop_reload();
 			main_flags.gps_ready = 1;
 			main_flags.gps_sync = 0;
 			break;
 
-		default:								//at the moment, the nmea data, captured after first PPS, is parsed
+		default:						//at the moment, the nmea data, captured after first PPS, is parsed
 			main_flags.gps_ready = 1;
 			main_flags.gps_sync = 1;
 
 			if ((p_gps_num->second % p_send_interval_values[p_settings->send_interval_opt]) == 0) //calc division remainder
 			{
-				main_flags.act_status = 1; 		//we are ready to show we are in act
+				main_flags.act_status = 1; //we are ready to show we are in act
 			}
 			else
 			{
@@ -226,49 +280,15 @@ void EXTI9_5_IRQHandler(void)
 }
 
 
-/*
-				  TIMINGS LEGEND (DEVICES_IN_GROUP = 6)
-		+----+                                            +----+
-		|    |                                            |    |
-		|    |                                            |    |			PPS Signal
-		|    |                                            |    |
-+-------+    +--------------------------------------------+    +------+
-
-		^    ^    ^    ^    ^    ^    ^    ^
-		|    |    |    |    |    |    |    |
-		|    |    |    |    |    |    |    |        				Time Slot #		Timer Interrupt #		Action
-		|    |    |    |    |    |    |    |        				(time_slot)		(overflow_counter)
-		|    |    |    |    |    |    |    |
-		|    |    |    |    |    |    |    |
-		|    |    |    |    |    |    |    |
-		|    |    |    |    |    |    |    |
-		|    |    |    |    |    |    |    |
-		|    |    |    |    |    |    |    |
-		|    |    |    |    |    |    |    +---------------------+					7						Stop Timer1, Set main_flags.time_slots_end
-		|    |    |    |    |    |    |								6
-		|    |    |    |    |    |    +--------------------------+					6
-		|    |    |    |    |    |									5
-		|    |    |    |    |    +-------------------------------+					5
-		|    |    |    |    |										4
-		|    |    |    |    +------------------------------------+					4
-		|    |    |    |											3
-		|    |    |    +-----------------------------------------+					3
-		|    |    |													2
-		|    |    +----------------------------------------------+					2
-		|    |														1
-		|    +---------------------------------------------------+					1
-		|				Timer1 interval
-		+--------------------------------------------------------+											PPS Interrupt, Start Timer1
-*/
 
 //Time slot interrupt
 void TIM1_UP_IRQHandler(void)
 {
-    TIM1->SR &= ~TIM_SR_UIF;                    		//clear interrupt
+    TIM1->SR &= ~TIM_SR_UIF;                    //clear interrupt
     
-    overflow_counter++;             					//increment ovf counter (starts from 1)
+    overflow_counter++;             			//increment ovf counter (starts from 1)
     
-    if(overflow_counter == (DEVICES_IN_GROUP + 1))    	//if interrupt at the end of the last time slot
+    if(overflow_counter == (DEVICES_IN_GROUP + 1))    //if interrupt at the end of the last time slot
     {
         timer1_stop_reload();
         overflow_counter = 0;
@@ -292,33 +312,46 @@ void TIM1_UP_IRQHandler(void)
     if (main_flags.act_status == 1)
     {
     	main_flags.act_status = 0;
-    	led_green_on();						//make ACT led on only here, after we are shure that gps data is valid (otherwise we would never reach this interrupt)
+    	led_green_on();					//make ACT led on only here, after we are shure that gps data is valid (otherwise we would never reach this interrupt)
     }
 }
 
 
 
-//Uptime counter (every 1 second)
+//End of beep
 void SysTick_Handler(void)
 {
-    uptime++;
-
-    main_flags.battery_low = adc_get_bat_voltage();
-    
-    calc_timeout(uptime);			//always calculate timeout for each device, even if this function is disabled
-    check_timeout(); 				//also check timeout in order to set/reset timeout flags
+	timer3_stop();	//pwm
+	timer3_clock_disable();
+	systick_stop();	//gating
 }
 
 
 
-//End of "beep"
+//Uptime counter (every 1 second)
+void RTC_IRQHandler(void)
+{
+	RTC->CRL &= ~RTC_CRL_SECF;		//Clear interrupt
+
+    uptime++;
+    main_flags.tick_1s = 1;
+}
+
+
+
+//End of ADC conversion (battery voltage)
+void ADC1_2_IRQHandler(void)
+{
+	main_flags.battery_low = adc_read_bat_voltage_result(); 			//EOC is cleared automatically after ADC_DR reading
+}
+
+
+
+//Scan buttons interval
 void TIM2_IRQHandler(void)
 {
-	timer2_stop();
 	TIM2->SR &= ~TIM_SR_UIF;        //clear gating timer int
-
-	timer3_stop();
-	led_board_off();
+	main_flags.begin_scan_buttons = 1;
 }
 
 

@@ -7,6 +7,8 @@
     file: lrns.c
 */
 
+
+
 #include <string.h>
 #include <math.h>
 #include "stm32f10x.h"
@@ -26,6 +28,8 @@
 #define FLAGS_GPS_FIX_POS       (3)
 #define FLAGS_PDOP_POS          (4)
 #define FLAGS_ALARM_POS         (5)
+
+
 
 //bit masks in "flag" variable
 #define FLAGS_BATTERY_MASK      (0x07)
@@ -53,7 +57,6 @@
 
 const double rad_to_deg = 57.29577951308232;        //rad to deg multiplyer
 const double deg_to_rad = 0.0174532925199433;       //deg to rad multiplyer
-
 const double twice_mean_earth_radius = 12742016.0;  // 2 * 6371008 meters
 const double pi_div_by_4 = 0.7853981633974483;      // pi / 4
 
@@ -135,7 +138,7 @@ void set_device_flags(uint8_t parameter_to_set, uint8_t parameter_value)
     }
 
     gps_air[device_number].flags &= ~mask;             			//clear bits
-	parameter_value &= (mask >> pos);   							//clear non-masked bits
+	parameter_value &= (mask >> pos);   						//clear non-masked bits
 	gps_air[device_number].flags |= (parameter_value << pos);  	//add to flags
 }
 
@@ -220,24 +223,25 @@ uint8_t check_timeout(void)
 {
 	uint8_t timeout_status = 0;
 
-    for (uint8_t dev = 1; dev <= DEVICES_IN_GROUP; dev++)
-    {
-		if (dev_aux[dev].memory_point_flag == 0)	//no timeout alarm for memory points
+	if (p_settings->timeout_threshold.as_integer != TIMEOUT_ALARM_DISABLED)
+	{
+		for (uint8_t dev = 1; dev <= DEVICES_IN_GROUP; dev++)
 		{
-			if (p_settings->timeout_threshold.as_integer != TIMEOUT_ALARM_DISABLED)
+			if (dev_aux[dev].memory_point_flag == 0)	//no timeout alarm for memory points
 			{
-				if (dev_aux[dev].timeout > p_settings->timeout_threshold.as_integer)
-				{
-					dev_aux[dev].timeout_flag = 1;
-					timeout_status = 1;
-				}
-				else
-				{
-					dev_aux[dev].timeout_flag = 0;
-				}
+
+					if (dev_aux[dev].timeout > p_settings->timeout_threshold.as_integer)
+					{
+						dev_aux[dev].timeout_flag = 1;
+						timeout_status = 1;
+					}
+					else
+					{
+						dev_aux[dev].timeout_flag = 0;
+					}
 			}
 		}
-    }
+	}
 
     if (timeout_status == 1)
     {
@@ -255,18 +259,21 @@ uint8_t check_fence(void)
 {
 	uint8_t fence_status = 0;
 
-	for (uint8_t dev = 1; dev <= DEVICES_IN_GROUP; dev++)
+	if (p_settings->fence_threshold.as_integer != FENCE_ALARM_DISABLED)
 	{
-		if (dev_aux[dev].exist_flag)
+		for (uint8_t dev = 1; dev <= DEVICES_IN_GROUP; dev++)
 		{
-			if (gps_rel[dev].distance > p_settings->fence_threshold.as_integer)
+			if (dev_aux[dev].exist_flag)
 			{
-				dev_aux[dev].fence_flag = 1;
-				fence_status = 1;
-			}
-			else
-			{
-				dev_aux[dev].fence_flag = 0;
+				if (gps_rel[dev].distance > p_settings->fence_threshold.as_integer)
+				{
+					dev_aux[dev].fence_flag = 1;
+					fence_status = 1;
+				}
+				else
+				{
+					dev_aux[dev].fence_flag = 0;
+				}
 			}
 		}
 	}

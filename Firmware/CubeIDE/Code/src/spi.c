@@ -9,6 +9,7 @@
 
 #include "stm32f10x.h"
 #include "spi.h"
+#include "bit_band.h"
 
 
 
@@ -26,6 +27,22 @@ void spi1_init(void)
     SPI1->CR1 &= ~SPI_CR1_CPOL;                     //SCK = 0 in IDLE
     SPI1->CR1 &= ~SPI_CR1_CPHA;                     //first rising edge capture
     SPI1->CR1 |= SPI_CR1_SPE;                       //enable spi
+
+    spi1_clock_disable();
+}
+
+
+
+void spi1_clock_disable(void)
+{
+	BIT_BAND_PERI(RCC->APB2ENR, RCC_APB2ENR_SPI1EN) = 0;
+}
+
+
+
+void spi1_clock_enable(void)
+{
+	BIT_BAND_PERI(RCC->APB2ENR, RCC_APB2ENR_SPI1EN) = 1;
 }
 
 
@@ -41,6 +58,22 @@ void spi2_init(void)
     SPI2->CR1 &= ~SPI_CR1_CPOL;             //SCK = 0 in IDLE
     SPI2->CR1 &= ~SPI_CR1_CPHA;             //first rising edge capture
     SPI2->CR1 |= SPI_CR1_SPE;               //enable spi
+
+    spi2_clock_disable();
+}
+
+
+
+void spi2_clock_disable(void)
+{
+	BIT_BAND_PERI(RCC->APB1ENR, RCC_APB1ENR_SPI2EN) = 0;
+}
+
+
+
+void spi2_clock_enable(void)
+{
+	BIT_BAND_PERI(RCC->APB1ENR, RCC_APB1ENR_SPI2EN) = 1;
 }
 
 

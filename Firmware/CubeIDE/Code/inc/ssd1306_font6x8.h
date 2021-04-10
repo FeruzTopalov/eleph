@@ -7,6 +7,13 @@
     file: ssd1306_font6x8.h
 */
 
+
+
+#ifndef SSD1306_FONT6X8_HEADER
+#define SSD1306_FONT6X8_HEADER
+
+
+
 //font 5x8 (intercharacter space not included, 6x8 with it) http://dotmatrixtool.com/
 const uint8_t font[][5] =
 {
@@ -155,3 +162,8 @@ const uint8_t font[][5] =
    { 0x55, 0x00, 0x41, 0x00, 0x55 },   //   0x8E 142 fence
    { 0x60, 0x60, 0x7f, 0x02, 0x0c },   //   0x8F 143 note
 };
+
+
+
+#endif /*SSD1306_FONT6X8_HEADER*/
+

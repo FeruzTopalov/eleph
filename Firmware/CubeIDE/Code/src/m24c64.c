@@ -7,6 +7,8 @@
     file: m24c64.c
 */
 
+
+
 #include "stm32f10x.h"
 #include "m24c64.h"
 #include "i2c.h"
@@ -64,7 +66,8 @@ uint8_t m24c64_poll(void)
         {
             //Stop
             I2C2->CR1 |= I2C_CR1_STOP;
-            
+            while (I2C2->CR1 & I2C_CR1_STOP){} 		//wait for stop cleared by hardware
+
             return 1;   //slave is ready
         }
         else
@@ -77,6 +80,7 @@ uint8_t m24c64_poll(void)
     
     //Stop before end
     I2C2->CR1 |= I2C_CR1_STOP;
+    while (I2C2->CR1 & I2C_CR1_STOP){} 		//wait for stop cleared by hardware
     
     return 0;       //end of attmepts, slave is busy or absent
 }
@@ -87,6 +91,8 @@ uint8_t m24c64_read_byte(uint16_t memory_address)
 {
     uint8_t result = 0;
     
+    i2c_clock_enable();
+
     if (m24c64_poll())
     {
         uint16_t SR_tmp;
@@ -148,6 +154,7 @@ uint8_t m24c64_read_byte(uint16_t memory_address)
         I2C2->CR1 &= ~I2C_CR1_ACK;
         //Stop
         I2C2->CR1 |= I2C_CR1_STOP;
+        while (I2C2->CR1 & I2C_CR1_STOP){} 		//wait for stop cleared by hardware
         //Wait for data register not empty
         while (!(I2C2->SR1 & I2C_SR1_RXNE))
         {
@@ -163,6 +170,8 @@ uint8_t m24c64_read_byte(uint16_t memory_address)
         result = 0;
     }
     
+    i2c_clock_disable();
+
     return result;
 }
 
@@ -170,6 +179,9 @@ uint8_t m24c64_read_byte(uint16_t memory_address)
 
 void m24c64_write_byte(uint8_t data_byte, uint16_t memory_address)
 {
+
+	i2c_clock_enable();
+    
     if (m24c64_poll())
     {
         uint8_t SR_tmp;
@@ -218,13 +230,20 @@ void m24c64_write_byte(uint8_t data_byte, uint16_t memory_address)
         
         //Stop
         I2C2->CR1 |= I2C_CR1_STOP;
+        while (I2C2->CR1 & I2C_CR1_STOP){} 		//wait for stop cleared by hardware
     }
+
+    i2c_clock_disable();
+
 }
 
 
 
 void m24c64_read_page(uint8_t data_array[], uint8_t page_address)
 {
+
+	i2c_clock_enable();
+    
     if (m24c64_poll())
     {
         uint8_t SR_tmp;
@@ -300,6 +319,7 @@ void m24c64_read_page(uint8_t data_array[], uint8_t page_address)
         I2C2->CR1 &= ~I2C_CR1_ACK;
         //Stop
         I2C2->CR1 |= I2C_CR1_STOP;
+        while (I2C2->CR1 & I2C_CR1_STOP){} 		//wait for stop cleared by hardware
         //Wait for data register not empty
         while (!(I2C2->SR1 & I2C_SR1_RXNE))
         {
@@ -310,12 +330,18 @@ void m24c64_read_page(uint8_t data_array[], uint8_t page_address)
 
         SR_tmp = SR_tmp + 1;
     }
+    
+    i2c_clock_disable();
+
 }
 
 
 
 void m24c64_write_page(uint8_t data_array[], uint8_t page_address)
 {
+
+	i2c_clock_enable();
+    
     if (m24c64_poll())
     {
         uint8_t SR_tmp = 0;
@@ -368,7 +394,11 @@ void m24c64_write_page(uint8_t data_array[], uint8_t page_address)
         
         //Stop
         I2C2->CR1 |= I2C_CR1_STOP;
+        while (I2C2->CR1 & I2C_CR1_STOP){} 		//wait for stop cleared by hardware
     }
+    
+    i2c_clock_disable();
+
 }
 
 
