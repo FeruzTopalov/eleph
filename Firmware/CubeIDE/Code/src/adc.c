@@ -7,6 +7,8 @@
     file: adc.c
 */
 
+
+
 #include "stm32f10x.h"
 #include "adc.h"
 #include "service.h"
@@ -14,10 +16,19 @@
 #include "points.h"
 #include "lrns.h"
 #include "gpio.h"
+#include "bit_band.h"
+
+
+
+void adc_start_bat_voltage_reading(void);
+void adc_clock_disable(void);
+void adc_clock_enable(void);
 
 
 
 #define GET_BAT_VOLTAGE_INTERVAL    (10)
+
+
 
 #define V_BATTERY_0_TO_10       	(3.0)
 #define V_BATTERY_10_TO_25      	(3.1)
@@ -61,15 +72,86 @@ void adc_init(void)
     ADC1->CR2 |= ADC_CR2_ADON;
     
     //Calibration
-    delay_cyc(100000);
+    delay_cyc(10000);
     ADC1->CR2 |= ADC_CR2_CAL;           //start cal
     while (ADC1->CR2 & ADC_CR2_CAL);    //wait
+
+    //Interrupt at the end of the conversion
+    ADC1->CR1 |= ADC_CR1_EOCIE;
+    NVIC_EnableIRQ(ADC1_2_IRQn);
+
+    adc_clock_disable();
 }
 
 
 
-//Get battery voltage
-uint8_t adc_get_bat_voltage(void)
+void adc_clock_disable(void)
+{
+	BIT_BAND_PERI(RCC->APB2ENR, RCC_APB2ENR_ADC1EN) = 0;
+}
+
+
+
+void adc_clock_enable(void)
+{
+	BIT_BAND_PERI(RCC->APB2ENR, RCC_APB2ENR_ADC1EN) = 1;
+}
+
+
+
+//Start ADC reading
+void adc_start_bat_voltage_reading(void)
+{
+	bat_mon_on();	//Enable resistive divider and wait a bit
+	adc_clock_enable();
+	delay_cyc(10);
+
+	//Start conversion
+	ADC1->CR2 |= ADC_CR2_SWSTART;
+}
+
+
+
+//Read the ADC conversion result; return 1 if battery low is detected
+uint8_t adc_read_bat_voltage_result(void)
+{
+	bat_mon_off();	//Disable resistive divider
+
+	//Convert
+	bat_voltage = 2 * ((ADC1->DR * vref) / 4096);     //x2 due to resistive voltage divider before ADC input
+
+	adc_clock_disable();
+
+	//Refresh flags
+	if (bat_voltage > V_BATTERY_75_TO_100)
+	{
+		set_device_flags(FLAGS_BATTERY, FLAG_BATTERY_75_TO_100);
+	}
+	else if (bat_voltage > V_BATTERY_50_TO_75)
+	{
+		set_device_flags(FLAGS_BATTERY, FLAG_BATTERY_50_TO_75);
+	}
+	else if (bat_voltage > V_BATTERY_25_TO_50)
+	{
+		set_device_flags(FLAGS_BATTERY, FLAG_BATTERY_25_TO_50);
+	}
+	else if (bat_voltage > V_BATTERY_10_TO_25)
+	{
+		set_device_flags(FLAGS_BATTERY, FLAG_BATTERY_10_TO_25);
+	}
+	else
+	{
+		set_device_flags(FLAGS_BATTERY, FLAG_BATTERY_0_TO_10);
+		return 1;
+	}
+
+    return 0;
+}
+
+
+
+//Check battery voltage with predefined interval
+void adc_check_bat_voltage(void)
 {
 	bat_interval_counter++;
 
@@ -77,50 +159,13 @@ uint8_t adc_get_bat_voltage(void)
     {
     	bat_interval_counter = 0;
 
-    	bat_mon_on();	//Enable resistive divider and wait a bit
-    	delay_cyc(100);
-
-		//Start conversation
-		ADC1->CR2 |= ADC_CR2_SWSTART;
-
-		//Wait for conversation end
-		while (!(ADC1->SR & ADC_SR_EOC));
-
-		bat_mon_off();	//Disable resistive divider
-
-		//Convert
-		bat_voltage = 2 * ((ADC1->DR * vref) / 4096);     //x2 due to resistive voltage divider before ADC input
-
-		//Refresh flags
-		if (bat_voltage > V_BATTERY_75_TO_100)
-		{
-			set_device_flags(FLAGS_BATTERY, FLAG_BATTERY_75_TO_100);
-		}
-		else if (bat_voltage > V_BATTERY_50_TO_75)
-		{
-			set_device_flags(FLAGS_BATTERY, FLAG_BATTERY_50_TO_75);
-		}
-		else if (bat_voltage > V_BATTERY_25_TO_50)
-		{
-			set_device_flags(FLAGS_BATTERY, FLAG_BATTERY_25_TO_50);
-		}
-		else if (bat_voltage > V_BATTERY_10_TO_25)
-		{
-			set_device_flags(FLAGS_BATTERY, FLAG_BATTERY_10_TO_25);
-		}
-		else
-		{
-			set_device_flags(FLAGS_BATTERY, FLAG_BATTERY_0_TO_10);
-			return 1;
-		}
+    	adc_start_bat_voltage_reading();
     }
-
-    return 0;
 }
 
 
 
-float get_bat_voltage(void)
+float get_bat_voltage_value(void)
 {
 	return bat_voltage;
 }

@@ -108,11 +108,11 @@
  #define SYSCLK_FREQ_24MHz  24000000
 #else
 /* #define SYSCLK_FREQ_HSE    HSE_VALUE */
-/* #define SYSCLK_FREQ_24MHz  24000000 */ 
+ #define SYSCLK_FREQ_24MHz  24000000
 /* #define SYSCLK_FREQ_36MHz  36000000 */
 /* #define SYSCLK_FREQ_48MHz  48000000 */
 /* #define SYSCLK_FREQ_56MHz  56000000 */
-#define SYSCLK_FREQ_72MHz  72000000
+/* #define SYSCLK_FREQ_72MHz  72000000 */
 #endif
 
 /*!< Uncomment the following line if you need to use external SRAM mounted
@@ -612,13 +612,13 @@ static void SetSysClockTo24(void)
 #endif
  
     /* HCLK = SYSCLK */
-    RCC->CFGR |= (uint32_t)RCC_CFGR_HPRE_DIV1;
+    RCC->CFGR |= (uint32_t)RCC_CFGR_HPRE_DIV8; 		// 24 MHz / 8 = 3 MHz
       
     /* PCLK2 = HCLK */
-    RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE2_DIV1;
+    RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE2_DIV1;		// 3 MHz / 1
     
     /* PCLK1 = HCLK */
-    RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE1_DIV1;
+    RCC->CFGR |= (uint32_t)RCC_CFGR_PPRE1_DIV1;		// 3 MHz / 1
     
 #ifdef STM32F10X_CL
     /* Configure PLLs ------------------------------------------------------*/

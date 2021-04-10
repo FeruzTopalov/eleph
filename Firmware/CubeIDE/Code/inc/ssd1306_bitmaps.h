@@ -7,7 +7,18 @@
     file: ssd1306_bitmaps.h
 */
 
+
+
+#ifndef SSD1306_BITMAPS_HEADER
+#define SSD1306_BITMAPS_HEADER
+
+
+
 extern const uint8_t startup_screen[1024];
 extern const uint8_t devices_blank[1024];
 extern const uint8_t radar_blank[1024];
 extern const uint8_t info_blank[1024];
+
+
+
+#endif /*SSD1306_BITMAPS_HEADER*/

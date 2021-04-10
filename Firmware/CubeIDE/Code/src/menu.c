@@ -7,6 +7,8 @@
     file: menu.c
 */
 
+
+
 #include <math.h>
 #include <string.h>
 #include "stm32f10x.h"
@@ -28,14 +30,13 @@
 
 
 
-char *FW_VERSION = "1.0";	//firmware
+char *FW_VERSION = "2.0";	//firmware
 char *HW_VERSION = "1";		//hardware
 
 
 
 #define ANOTHER_DEVICE_START_ROW        (3)
 #define ANOTHER_RADAR_DEVICE_START_ROW	(2)
-
 
 #define FREQ_CHANNEL_FIRST  (1)
 #define FREQ_CHANNEL_LAST   (69)
@@ -49,14 +50,11 @@ char *HW_VERSION = "1";		//hardware
 #define TX_POWER_FIRST_OPTION       (TX_POWER_10MILLIW_SETTING)
 #define TX_POWER_LAST_OPTION        (TX_POWER_100MILLIW_SETTING)
 
-
 #define SEND_INTERVAL_FIRST_OPTION       (SEND_INTERVAL_1S_SETTING)
 #define SEND_INTERVAL_LAST_OPTION        (SEND_INTERVAL_60S_SETTING)
 
-
 #define MEMORY_SLOT_FIRST		(1)
 #define MEMORY_SLOT_LAST		(MEMORY_SLOTS_TOTAL)
-
 
 #define DEVICE_NUMBER_FIRST (1)
 #define DEVICE_NUMBER_LAST  (DEVICES_IN_GROUP)
@@ -67,15 +65,21 @@ char *HW_VERSION = "1";		//hardware
 
 void toggle_alarm(void);
 
+
+
 uint8_t get_current_item(void);
 uint8_t get_last_item(void);
 void set_current_item(uint8_t new_value);
 void reset_current_item_in_menu(uint8_t menu);
 
+
+
 void scroll_up(void);
 void scroll_down(void);
 void switch_forward(void);
 void switch_backward(void);
+
+
 
 void draw_main(void);
 void draw_devices(void);
@@ -103,6 +107,8 @@ void draw_delete_device(void);
 void draw_save_device(void);
 void draw_save_device_as(void);
 void draw_saved_popup(void);
+
+
 
 void set_dev_num_up(void);
 void set_dev_num_down(void);
@@ -205,6 +211,8 @@ enum
 //note: for all menus first item always has index of 0
 #define M_ALL_I_FIRST (0)
 
+
+
 //MAIN
 enum
 {
@@ -215,6 +223,7 @@ enum
     M_MAIN_I_INFO,                  //last item
     M_MAIN_I_LAST = M_MAIN_I_INFO   //copy last item here
 };
+
 
 
 //SETTINGS
@@ -465,8 +474,12 @@ struct gps_rel_struct **pp_gps_rel;
 struct dev_aux_struct **pp_dev_aux;
 struct memory_slot_struct **pp_memory_slot;
 
+
+
 uint8_t *p_send_interval_values;
 uint8_t *p_get_tx_power_values;
+
+
 
 uint8_t current_menu;                               //Actually Current Menu value (real-time)
 char buf[21];                                       //temporary char buffer for screen text fragments
@@ -476,9 +489,13 @@ int16_t tmpi16;                                     //temporary int16
 uint8_t flag_settings_changed = 0;                  //is settings changed?
 uint8_t device_id_current_symbol = 0;               //current editing symbol in device_id[]
 
+
+
 const char point_to_save_default_name[MEMORY_POINT_NAME_LENGTH + 1] = MEMORY_POINT_DEFAULT_NAME;
 char point_to_save_name[MEMORY_POINT_NAME_LENGTH + 1];
 uint8_t point_name_current_symbol = 0;
+
+
 
 uint8_t current_each_device = DEVICE_NUMBER_FIRST;  //current device number in EACH DEVICE menu
 uint8_t current_radar_device = 0;  					//current device number in RADAR menu, set to 0, see draw_radar()
@@ -486,15 +503,16 @@ uint8_t current_device_to_load = 0;
 uint8_t current_slot_to_load = MEMORY_SLOT_FIRST;	//currently selected point slot in points menu
 uint8_t current_slot_to_save = 0;
 uint8_t point_to_save_list[MEMORY_SLOTS_TOTAL + 1];
-uint8_t device_to_load_list[DEVICES_IN_GROUP + 1];
+uint8_t device_to_load_list[DEVICES_IN_GROUP + 1]; //todo: why DEVICES_IN_GROUP + 1 ??? should be DEVICES_IN_GROUP
 uint8_t radar_list[DEVICES_IN_GROUP + 1]; 			//list of devices in radar menu, 5 devices total (because of except me); radar_list[device_number] = item; items start from 0
 uint8_t radar_list_hide[DEVICES_IN_GROUP + 1];		//if == 1 then hide device cross on the radar screen
 uint8_t device_number;								//this device number
 
+
+
 const uint8_t sx0 = 24;	//radar center pixel on screen (i.e. my position)
 const uint8_t sy0 = 31;
 const uint8_t r_circ_dots = 20;		//screen circle radius in dots
-
 uint8_t custom_exclam_mark[2] = {0, 0x5F};
 
 
@@ -519,7 +537,8 @@ void init_menu(void)
 	p_get_tx_power_values = get_tx_power_values();
 
     //init variables
-    current_each_device = device_number;   //set me current
+    current_each_device = device_number;   //set me as current
+
     current_menu = M_MAIN;
     set_current_item(M_MAIN_I_DEVICES);
 }
@@ -529,49 +548,58 @@ void init_menu(void)
 //Check for buttons and change menu if needed
 void change_menu(uint8_t button_code)
 {
-    if (button_code)
+    if (button_code) //if any button was pressed
     {
+    	if (ssd1306_get_display_status() == SSD1306_DISPLAY_ON) //if lcd is on
+    	{
+			//search for exclusive operation for this case
+			for (uint8_t i = 0; menu_exclusive_table[i].current_menu; i++)     //until end marker
+			{
+				if (current_menu == menu_exclusive_table[i].current_menu &&
+					button_code == menu_exclusive_table[i].button_pressed)
+				{
+					menu_exclusive_table[i].execute_function();
+					return;         //exit
+				}
+			}
 
-        //search for exclusive operation for this case
-        for (uint8_t i = 0; menu_exclusive_table[i].current_menu; i++)     //until end marker
-        {
-            if (current_menu == menu_exclusive_table[i].current_menu &&
-                button_code == menu_exclusive_table[i].button_pressed)
-            {
-                menu_exclusive_table[i].execute_function();
-                return;         //exit
-            }
-        }
-        
-        //well, there is no exclusive operations for that case, perform default action
-        switch (button_code)
-        {
-            case BTN_UP:
-                scroll_up();
-                break;
-            
-            case BTN_DOWN:
-                scroll_down();
-                break;
-            
-            case BTN_OK:
-                switch_forward();
-                break;
-            
-            case BTN_ESC:
-                switch_backward();
-                break;
-            
-            case BTN_PWR_LONG:
-                toggle_alarm();
-                break;
+			//well, there is no exclusive operations for that case, perform default action
+			switch (button_code)
+			{
+				case BTN_UP:
+					scroll_up();
+					break;
 
-            case BTN_ESC_LONG:
-            	toggle_mute();
-            	draw_current_menu();
-            	break;
-        }
-        
+				case BTN_DOWN:
+					scroll_down();
+					break;
+
+				case BTN_OK:
+					switch_forward();
+					break;
+
+				case BTN_ESC:
+					switch_backward();
+					break;
+
+				case BTN_PWR:
+					ssd1306_toggle_display();
+					break;
+
+				case BTN_PWR_LONG:
+					toggle_alarm();
+					break;
+
+				case BTN_ESC_LONG:
+					toggle_mute();
+					draw_current_menu();
+					break;
+			}
+    	}
+    	else if (button_code == BTN_PWR)	//if lcd is off then check for PRW button was pressed. If so - toggle the lcd
+    	{
+    		ssd1306_toggle_display();
+    	}
     }
 }
 
@@ -729,7 +757,7 @@ void reset_current_item_in_menu(uint8_t menu)
 
 
 
-//Draw current menu (after scroll)
+//Draw current menu
 void draw_current_menu(void)
 {
     for (uint8_t i = 0; menu_draw_table[i].current; i++)
@@ -777,7 +805,7 @@ void draw_devices(void)
     ssd1306_bitmap(&devices_blank[0]);
     
     //TRX
-    if (get_main_flags()->gps_sync)
+    if (get_main_flags()->gps_sync && p_gps_num->status == GPS_DATA_VALID)
     {
         ssd1306_char_pos(0, 18, SYMB_ARROW_UP, 0);
         ssd1306_char_pos(0, 19, SYMB_ARROW_DOWN, 0);
@@ -1055,8 +1083,6 @@ void draw_each_device(void)
             break;
     }
 
-
-
     //Sattelites
     if (p_gps_raw->time[0] == 0)                           //if no time received then no sattelites at all
     {
@@ -1080,7 +1106,7 @@ void draw_each_device(void)
     
 
     //TRX
-    if (get_main_flags()->gps_sync)
+    if (get_main_flags()->gps_sync && p_gps_num->status == GPS_DATA_VALID)
     {
         ssd1306_char_pos(0, icon_col--, SYMB_ARROW_DOWN, 0);
         ssd1306_char_pos(0, icon_col--, SYMB_ARROW_UP, 0);
@@ -1099,7 +1125,6 @@ void draw_each_device(void)
     {
         ssd1306_char_pos(0, icon_col--, SYMB_ALARM, 0);
     }
-    
     
     
     if (current_each_device == device_number)      //if me
@@ -1135,7 +1160,7 @@ void draw_each_device(void)
         ssd1306_char_pos(1, 15, p_gps_raw->time[4], 0);
         ssd1306_char_pos(1, 16, p_gps_raw->time[5], 0);
         
-        ssd1306_print(1, 18, "GMT", 0);
+        ssd1306_print(1, 18, "UTC", 0);
         
         ssd1306_print(2, 0, "LAT", 0);
         ftoa32(p_gps_num->latitude.in_deg, 6, &buf[0]);
@@ -1232,7 +1257,7 @@ void draw_each_device(void)
         ssd1306_print(7, 4, &buf[0], 0);
         
         ssd1306_print(7, 11, "BAT", 0);
-        ftoa32(get_bat_voltage(), 2, &buf[0]);
+        ftoa32(get_bat_voltage_value(), 2, &buf[0]);
         ssd1306_print(7, 15, &buf[0], 0);
         ssd1306_char('V', 0);
     }
@@ -1443,8 +1468,6 @@ void draw_each_device(void)
 				ssd1306_print(7, 15, "ALR", 0);
 			}
         }
-
-
 
     }
     ssd1306_update();
@@ -1667,7 +1690,7 @@ void draw_radar(void)
     }
 
     //TRX
-    if (get_main_flags()->gps_sync)
+    if (get_main_flags()->gps_sync && p_gps_num->status == GPS_DATA_VALID)
     {
         ssd1306_char_pos(0, icon_col--, SYMB_ARROW_DOWN, 0);
         ssd1306_char_pos(0, icon_col--, SYMB_ARROW_UP, 0);
@@ -1897,7 +1920,6 @@ void draw_radar(void)
     }
 
 
-
     //plot on radar
     for (uint8_t dev = 1; dev <= DEVICES_IN_GROUP; dev++)
     {
@@ -1947,14 +1969,6 @@ void draw_points(void)
 	#define POINTS_COL               (1)
 	#define POINTS_NAME_COL          (4)
 	#define POINTS_DATE_COL          (10)
-
-
-
-#if 0
-
-	save_memory_point(1, "TEST1", 1);
-
-#endif
 
 	read_memory_slots();
 
@@ -2100,7 +2114,7 @@ void draw_info(void)
 
     ssd1306_bitmap(&info_blank[0]);
 
-    ssd1306_print(0, 0, "LRNS", 0);
+    ssd1306_print(0, 0, "LRNS Eleph", 0);
 
     ssd1306_print(2, 0, "HW/FW: ", 0);
     ssd1306_print_next(HW_VERSION, 0);

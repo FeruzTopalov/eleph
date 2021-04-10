@@ -6,7 +6,6 @@
     
     file: points.c
 */
-
 #include <string.h>
 #include "stm32f10x.h"
 #include "points.h"
@@ -22,15 +21,19 @@
 //positions:
 #define MEMORY_POINT_EXIST_FLAG_POS          	(0)
 
-#define MEMORY_POINT_NAME_POS          			(1)
+#define MEMORY_POINT_NAME_POS          		(1)
 
 #define MEMORY_POINT_DAY_POS          			(6)
 #define MEMORY_POINT_MONTH_POS          		(8)
-#define MEMORY_POINT_YEAR_POS          			(10)
+#define MEMORY_POINT_YEAR_POS          		(10)
 
-#define MEMORY_POINT_LATITUDE_POS          		(12)
+#define MEMORY_POINT_LATITUDE_POS          	(12)
 #define MEMORY_POINT_LONGITUDE_POS          	(16)
-#define MEMORY_POINT_ALTITUDE_POS          		(20)
+#define MEMORY_POINT_ALTITUDE_POS          	(20)
+
+
+
+
 
 
 
@@ -51,7 +54,6 @@
 									MEMORY_SLOT_3_NAME, 	\
 									MEMORY_SLOT_4_NAME, 	\
 									MEMORY_SLOT_5_NAME	}
-
 
 
 void clear_point_buffer(void);
@@ -210,11 +212,13 @@ void load_memory_point(uint8_t dev_num, uint8_t slot_num)
 
 
 
+
 void delete_memory_point(uint8_t slot_num)
 {
 	clear_point_buffer();
 	m24c64_write_page(&point_buffer[0], slot_num);
 }
+
 
 
 

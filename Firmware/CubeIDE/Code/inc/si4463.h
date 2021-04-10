@@ -7,9 +7,20 @@
     file: si4463.h
 */
 
+
+
+#ifndef SI4463_HEADER
+#define SI4463_HEADER
+
+
+
 void si4463_init(void);
 void si4463_tx_packet(void);
 void si4463_start_rx(void);
 uint8_t si4463_get_rx_packet(void);
 uint8_t *get_air_packet_tx(void);
 uint8_t *get_air_packet_rx(void);
+
+
+
+#endif /*SI4463_HEADER*/

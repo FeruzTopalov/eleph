@@ -7,6 +7,8 @@
     file: gps.c
 */
 
+
+
 #include <string.h>
 #include "stm32f10x.h"
 #include "main.h"
@@ -24,6 +26,7 @@ void gps_raw_convert_to_numerical(void);
 
 
 const float knots_to_kph = 1.852;                   //knots to kilometers per hour multiplyer
+
 
 
 uint8_t nmea_checksum(uint16_t pos);
@@ -83,7 +86,6 @@ void gps_raw_convert_to_numerical(void)
     tmp_char[2] = 0;
     gps_num.second = (uint8_t)atoi32(&tmp_char[0]);
 
-
     //Date
     tmp_char[0] = gps_raw.date[0];
     tmp_char[1] = gps_raw.date[1];
@@ -99,7 +101,6 @@ void gps_raw_convert_to_numerical(void)
     tmp_char[1] = gps_raw.date[5];
     tmp_char[2] = 0;
     gps_num.year = (uint8_t)atoi32(&tmp_char[0]);
-
 
     //Latitude
     tmp_char[0] = gps_raw.latitude[0];
@@ -121,7 +122,6 @@ void gps_raw_convert_to_numerical(void)
     }
 
     gps_num.latitude.in_rad = gps_num.latitude.in_deg * deg_to_rad;
-
 
     //Longitude
     tmp_char[0] = gps_raw.longitude[0];
@@ -145,7 +145,6 @@ void gps_raw_convert_to_numerical(void)
 
     gps_num.longitude.in_rad = gps_num.longitude.in_deg * deg_to_rad;
 
-
     //Speed
     gps_num.speed = atof32(&(gps_raw.speed[0])) * knots_to_kph;
 
@@ -158,7 +157,6 @@ void gps_raw_convert_to_numerical(void)
     //Satellites
     gps_num.sat_view = (uint8_t)atoi32(&(gps_raw.sat_view[0]));
     gps_num.sat_used = (uint8_t)atoi32(&(gps_raw.sat_used[0]));
-
 
     //Status, Mode, PDOP
     if (gps_raw.status[0] == 'A')
