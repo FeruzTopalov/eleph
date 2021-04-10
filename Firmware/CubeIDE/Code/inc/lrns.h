@@ -7,6 +7,13 @@
     file: lrns.h
 */
 
+
+
+#ifndef LRNS_HEADER
+#define LRNS_HEADER
+
+
+
 extern const double deg_to_rad;       //deg to rad multiplyer
 
 
@@ -113,3 +120,7 @@ struct dev_aux_struct
     uint8_t memory_point_flag;				//is this device was loaded as a point from memory?
     char point_name[MEMORY_POINT_NAME_LENGTH + 1];	//user-defined point name in the slot
 };
+
+
+
+#endif /*LRNS_HEADER*/

@@ -1,4 +1,8 @@
-spi.c:16:6:spi1_init	4	static
-spi.c:34:6:spi2_init	4	static
-spi.c:49:9:spi1_trx	16	static
-spi.c:61:9:spi2_trx	16	static
+spi.c:17:6:spi1_init	8	static
+spi.c:36:6:spi1_clock_disable	4	static
+spi.c:43:6:spi1_clock_enable	4	static
+spi.c:51:6:spi2_init	8	static
+spi.c:67:6:spi2_clock_disable	4	static
+spi.c:74:6:spi2_clock_enable	4	static
+spi.c:82:9:spi1_trx	16	static
+spi.c:94:9:spi2_trx	16	static

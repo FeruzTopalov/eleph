@@ -1,7 +1,7 @@
-m24c64.c:26:9:m24c64_poll	16	static
-m24c64.c:86:9:m24c64_read_byte	24	static
-m24c64.c:171:6:m24c64_write_byte	24	static
-m24c64.c:226:6:m24c64_read_page	24	static
-m24c64.c:317:6:m24c64_write_page	24	static
-m24c64.c:376:6:m24c64_erase_page	56	static
-m24c64.c:390:6:m24c64_erase_all	16	static
+m24c64.c:28:9:m24c64_poll	16	static
+m24c64.c:90:9:m24c64_read_byte	24	static
+m24c64.c:180:6:m24c64_write_byte	24	static
+m24c64.c:242:6:m24c64_read_page	24	static
+m24c64.c:340:6:m24c64_write_page	24	static
+m24c64.c:406:6:m24c64_erase_page	56	static
+m24c64.c:420:6:m24c64_erase_all	16	static

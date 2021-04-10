@@ -13,6 +13,7 @@
 #include "gpio.h"
 #include "spi.h"
 #include "service.h"
+#include "menu.h"
 
 
 
@@ -22,16 +23,20 @@
 #define FONT_SIZE_X       (6)
 #define FONT_SIZE_Y       (8)
 
+#define SSD1306_COMMAND_ON	(0xAF)
+#define SSD1306_COMMAND_OFF	(0xAE)
 
 
-uint8_t screen_buf[LCD_SIZE_BYTES];     //public array 128x64 pixels
-uint16_t buf_pos = 0;                   //public var 0 - 1023
+
+uint8_t screen_buf[LCD_SIZE_BYTES];     		//public array 128x64 pixels
+uint16_t buf_pos = 0;                   		//public var 0 - 1023
+uint8_t display_status = SSD1306_DISPLAY_ON;	//lcd panel status on/off
 
 
 
 //SSD1306 init sequence (first byte in line = amount of config bytes in line)
 const uint8_t ssd1306_conf[] =
-{
+{// len,  val1, val2, ...
     0x02, 0x20, 0x00,           /* horizontal adressing */ \
     0x02, 0xA1, 0xC8,           /* invert orientation */ \
     0x03, 0x8D, 0x14, 0xAF,     /* enable charge pump and display */ \
@@ -43,15 +48,17 @@ const uint8_t ssd1306_conf[] =
 //SSD1306 Init
 void ssd1306_init(void)
 {
+	spi2_clock_enable();
+
     cs_ssd1306_inactive();      //ports init state
     res_ssd1306_inactive();
     ssd1306_command_mode();
-    delay_cyc(100000);
+    delay_cyc(10000);
     
     res_ssd1306_active();       //reset ssd1306
-    delay_cyc(100000);
+    delay_cyc(10000);
     res_ssd1306_inactive();
-    delay_cyc(100000);
+    delay_cyc(10000);
     
     uint8_t i = 0;
     uint8_t len = 0;
@@ -67,8 +74,59 @@ void ssd1306_init(void)
         cs_ssd1306_inactive();
     }
     
+    spi2_clock_disable();
+
     ssd1306_clear();
     ssd1306_update();
+}
+
+
+
+void ssd1306_on(void)
+{
+	spi2_clock_enable();
+	ssd1306_command_mode();
+	cs_ssd1306_active();
+	spi2_trx(SSD1306_COMMAND_ON);
+	cs_ssd1306_inactive();
+	spi2_clock_disable();
+}
+
+
+
+void ssd1306_off(void)
+{
+	spi2_clock_enable();
+	ssd1306_command_mode();
+	cs_ssd1306_active();
+	spi2_trx(SSD1306_COMMAND_OFF);
+	cs_ssd1306_inactive();
+	spi2_clock_disable();
+}
+
+
+
+//Toggle display on or off
+void ssd1306_toggle_display(void)
+{
+	if (display_status == SSD1306_DISPLAY_ON)
+	{
+		display_status = SSD1306_DISPLAY_OFF;
+		ssd1306_off();
+	}
+	else
+	{
+		display_status = SSD1306_DISPLAY_ON;
+		draw_current_menu(); //update screen content before enabling the lcd
+		ssd1306_on();
+	}
+}
+
+
+
+uint8_t ssd1306_get_display_status(void)
+{
+	return display_status;
 }
 
 
@@ -76,18 +134,25 @@ void ssd1306_init(void)
 //Update screen with buffer content
 void ssd1306_update(void)
 {
-    ssd1306_data_mode();
-    cs_ssd1306_active();
-    for (uint16_t i = 0; i < LCD_SIZE_BYTES; i++)
-    {
-        spi2_trx(screen_buf[i]);
-    }
-    cs_ssd1306_inactive();
+	if (display_status == SSD1306_DISPLAY_ON) //update display content only if the display is on
+	{
+		spi2_clock_enable();
+
+		ssd1306_data_mode();
+		cs_ssd1306_active();
+		for (uint16_t i = 0; i < LCD_SIZE_BYTES; i++)
+		{
+			spi2_trx(screen_buf[i]);
+		}
+		cs_ssd1306_inactive();
+
+		spi2_clock_disable();
+	}
 }
 
 
 
-//Fill all screen pixels
+//Fill all screen buffer pixels
 void ssd1306_fill(void)
 {
     for (uint16_t i = 0; i < LCD_SIZE_BYTES; i++)
@@ -98,7 +163,7 @@ void ssd1306_fill(void)
 
 
 
-//Clear all screen pixels
+//Clear all screen buffer pixels
 void ssd1306_clear(void)
 {
     for (uint16_t i = 0; i < LCD_SIZE_BYTES; i++)

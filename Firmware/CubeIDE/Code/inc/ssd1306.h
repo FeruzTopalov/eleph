@@ -7,6 +7,18 @@
     file: ssd1306.h
 */
 
+
+
+#ifndef SSD1306_HEADER
+#define SSD1306_HEADER
+
+
+
+#define SSD1306_DISPLAY_ON	(1)
+#define SSD1306_DISPLAY_OFF	(0)
+
+
+
 #define LCD_LAST_COL     	(20)
 #define LCD_LAST_ROW       	(7)
 
@@ -33,6 +45,10 @@
 
 
 void ssd1306_init(void);
+void ssd1306_on(void);
+void ssd1306_off(void);
+void ssd1306_toggle_display(void);
+uint8_t ssd1306_get_display_status(void);
 void ssd1306_fill(void);
 void ssd1306_clear(void);
 void ssd1306_pixel(uint8_t x, uint8_t y, int8_t action);
@@ -45,3 +61,7 @@ void ssd1306_print_viceversa(uint8_t row, uint8_t col, char *p_str, uint8_t inv)
 void ssd1306_bitmap(const uint8_t arr[]);
 void ssd1306_update(void);
 void ssd1306_print_byte(uint8_t row, uint8_t col, uint8_t *p_byte, uint8_t amount);
+
+
+
+#endif /*SSD1306_HEADER*/

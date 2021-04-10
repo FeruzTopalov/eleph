@@ -7,6 +7,8 @@
     file: gpio.c
 */
 
+
+
 #include "stm32f10x.h"
 #include "gpio.h"
 
@@ -53,20 +55,24 @@ void gpio_init(void)
     GPIOA->ODR |= GPIO_ODR_ODR5;        //pull-up on
     
     //PA6 - Battery monitor switch
-    GPIOA->CRL |= GPIO_CRL_MODE6;       //output 50 MHz
+    GPIOA->CRL &= ~GPIO_CRL_MODE6_0;    //output 2 MHz
+    GPIOA->CRL |= GPIO_CRL_MODE6_1;
     GPIOA->CRL &= ~GPIO_CRL_CNF6;       //output push-pull
 
     //PA7 - Piezo Buzzer (PWM)
-    GPIOA->CRL |= GPIO_CRL_MODE7;      //output mode
-    GPIOA->CRL &= ~GPIO_CRL_CNF7_0;    //alternate output push-pull
+    GPIOA->CRL &= ~GPIO_CRL_MODE7_0;  	//output 2 MHz
+    GPIOA->CRL |= GPIO_CRL_MODE7_1;
+    GPIOA->CRL &= ~GPIO_CRL_CNF7_0;    	//alternate output push-pull
     GPIOA->CRL |= GPIO_CRL_CNF7_1;
 
     //PA8 - RES (SSD1306)
-    GPIOA->CRH |= GPIO_CRH_MODE8;      //output 50 MHz
-    GPIOA->CRH &= ~GPIO_CRH_CNF8;      //output push-pull
+    GPIOA->CRH &= ~GPIO_CRH_MODE8_0;    //output 2 MHz
+    GPIOA->CRH |= GPIO_CRH_MODE8_1;
+    GPIOA->CRH &= ~GPIO_CRH_CNF8;      	//output push-pull
     
     //PA9 - USART TX1 (Debug out)
-    GPIOA->CRH |= GPIO_CRH_MODE9;       //output 50 MHz
+    GPIOA->CRH &= ~GPIO_CRH_MODE9_0;    //output 2 MHz
+    GPIOA->CRH |= GPIO_CRH_MODE9_1;
     GPIOA->CRH &= ~GPIO_CRH_CNF9_0;     //alternate output push-pull
     GPIOA->CRH |= GPIO_CRH_CNF9_1;
     
@@ -88,23 +94,28 @@ void gpio_init(void)
     GPIOA->ODR &= ~GPIO_ODR_ODR11;      //pull-down
     
     //PA15 - CS (SI4463)
-    GPIOA->CRH |= GPIO_CRH_MODE15;      //output 50 MHz
+    GPIOA->CRH &= ~GPIO_CRH_MODE15_0;   //output 2 MHz
+    GPIOA->CRH |= GPIO_CRH_MODE15_1;
     GPIOA->CRH &= ~GPIO_CRH_CNF15;      //output push-pull
     
     
+
     //Port B
     RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
     
     //PB0 - Red LED
-    GPIOB->CRL |= GPIO_CRL_MODE0;       //output 50 MHz
+    GPIOB->CRL &= ~GPIO_CRL_MODE0_0;    //output 2 MHz
+    GPIOB->CRL |= GPIO_CRL_MODE0_1;
     GPIOB->CRL &= ~GPIO_CRL_CNF0;       //output push-pull
     
     //PB1 - Green LED
-    GPIOB->CRL |= GPIO_CRL_MODE1;       //output 50 MHz
+    GPIOB->CRL &= ~GPIO_CRL_MODE1_0;    //output 2 MHz
+    GPIOB->CRL |= GPIO_CRL_MODE1_1;
     GPIOB->CRL &= ~GPIO_CRL_CNF1;       //output push-pull
     
     //PB3 - SCK (SI4463)
-    GPIOB->CRL |= GPIO_CRL_MODE3;       //output 50 MHz
+    GPIOB->CRL &= ~GPIO_CRL_MODE3_0;    //output 2 MHz
+    GPIOB->CRL |= GPIO_CRL_MODE3_1;
     GPIOB->CRL &= ~GPIO_CRL_CNF3_0;     //alternate output push-pull
     GPIOB->CRL |= GPIO_CRL_CNF3_1;
     
@@ -114,7 +125,8 @@ void gpio_init(void)
     GPIOB->CRL &= ~GPIO_CRL_CNF4_1;
     
     //PB5 - MOSI (SI4463)
-    GPIOB->CRL |= GPIO_CRL_MODE5;       //output 50 MHz
+    GPIOB->CRL &= ~GPIO_CRL_MODE5_0;    //output 2 MHz
+    GPIOB->CRL |= GPIO_CRL_MODE5_1;
     GPIOB->CRL &= ~GPIO_CRL_CNF5_0;     //alternate output push-pull
     GPIOB->CRL |= GPIO_CRL_CNF5_1;
     
@@ -125,41 +137,50 @@ void gpio_init(void)
     GPIOB->ODR |= GPIO_ODR_ODR6;        //pull-up
     
     //PB7 - SDN (SI4463)
-    GPIOB->CRL |= GPIO_CRL_MODE7;       //output 50 MHz
+    GPIOB->CRL &= ~GPIO_CRL_MODE7_0;    //output 2 MHz
+    GPIOB->CRL |= GPIO_CRL_MODE7_1;
     GPIOB->CRL &= ~GPIO_CRL_CNF7;       //output push-pull
     
     //PB10 - I2C SCL
-    GPIOB->CRH |= GPIO_CRH_MODE10;       //output 50 MHz
-    GPIOB->CRH |= GPIO_CRH_CNF10;        //alternate function open-drain
+    GPIOB->CRH &= ~GPIO_CRH_MODE10_0;   //output 2 MHz
+    GPIOB->CRH |= GPIO_CRH_MODE10_1;
+    GPIOB->CRH |= GPIO_CRH_CNF10;       //alternate function open-drain
     
     //PB11 - I2C SDA
-    GPIOB->CRH |= GPIO_CRH_MODE11;       //output max speed
-    GPIOB->CRH |= GPIO_CRH_CNF11;        //alternate function open-drain
+    GPIOB->CRH &= ~GPIO_CRH_MODE11_0;   //output 2 MHz
+    GPIOB->CRH |= GPIO_CRH_MODE11_1;
+    GPIOB->CRH |= GPIO_CRH_CNF11;       //alternate function open-drain
     
     //PB12 - CS (SSD1306)
-    GPIOB->CRH |= GPIO_CRH_MODE12;      //output 50 MHz
+    GPIOB->CRH &= ~GPIO_CRH_MODE12_0;   //output 2 MHz
+    GPIOB->CRH |= GPIO_CRH_MODE12_1;
     GPIOB->CRH &= ~GPIO_CRH_CNF12;      //output push-pull
     
     //PB13 - SCK (SSD1306)
-    GPIOB->CRH |= GPIO_CRH_MODE13;      //output 50 MHz
+    GPIOB->CRH &= ~GPIO_CRH_MODE13_0;   //output 2 MHz
+    GPIOB->CRH |= GPIO_CRH_MODE13_1;
     GPIOB->CRH &= ~GPIO_CRH_CNF13_0;    //alternate output push-pull
     GPIOB->CRH |= GPIO_CRH_CNF13_1;
     
     //PB14 - D/C (SSD1306)
-    GPIOB->CRH |= GPIO_CRH_MODE14;      //output 50 MHz
+    GPIOB->CRH &= ~GPIO_CRH_MODE14_0;   //output 2 MHz
+    GPIOB->CRH |= GPIO_CRH_MODE14_1;
     GPIOB->CRH &= ~GPIO_CRH_CNF14;      //output push-pull
     
     //PB15 - MOSI (SSD1306)
-    GPIOB->CRH |= GPIO_CRH_MODE15;      //output 50 MHz
+    GPIOB->CRH &= ~GPIO_CRH_MODE15_0;   //output 2 MHz
+    GPIOB->CRH |= GPIO_CRH_MODE15_1;
     GPIOB->CRH &= ~GPIO_CRH_CNF15_0;    //alternate output push-pull
     GPIOB->CRH |= GPIO_CRH_CNF15_1;
     
     
-    //Port C
+
+    //Port C																	//todo: disable whole port C to lower power consumption
     RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
     
     //PC13 - Blue led
-    GPIOC->CRH |= GPIO_CRH_MODE13;      //output 50 MHz
+    GPIOC->CRH &= ~GPIO_CRH_MODE13_0;   //output 2 MHz
+    GPIOC->CRH |= GPIO_CRH_MODE13_1;
     GPIOC->CRH &= ~GPIO_CRH_CNF13;      //output push-pull
     led_board_off();
 }
