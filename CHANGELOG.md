@@ -1,6 +1,13 @@
 # Eleph changelog
 **Legend:** _"Hardware version/Software version"_  
 
+---
+#### v2/1.0 - November 28, 2021
+- New hardware
+- PCB files ready to production
+- Updated UI
+- Many bugs fixed
+
 
 
 ---

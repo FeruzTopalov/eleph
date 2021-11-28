@@ -8,7 +8,7 @@ Code/src/lrns.o: ../Code/src/lrns.c \
  D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/gps.h \
  D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/points.h \
  D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/lrns.h \
- D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/si4463.h \
+ D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/rfm98.h \
  D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/gpio.h
 
 D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/CMSIS/inc/stm32f10x.h:
@@ -29,6 +29,6 @@ D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/points.h:
 
 D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/lrns.h:
 
-D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/si4463.h:
+D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/rfm98.h:
 
 D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc/gpio.h:

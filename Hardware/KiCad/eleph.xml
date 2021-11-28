@@ -1,0 +1,1113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>D:\Projects\LRNS\HW_rev2\eleph\eleph\eleph.sch</source>
+    <date>27/03/2021 18:37:08</date>
+    <tool>Eeschema (5.1.9)-1</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>Eleph HW V2</title>
+        <company/>
+        <rev>1</rev>
+        <date>2021-03-27</date>
+        <source>eleph.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value="https://github.com/FeruzTopalov/eleph/"/>
+        <comment number="4" value="Feruz Topalov"/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="U4">
+      <value>STM32F103C8T6</value>
+      <footprint>eleph:LQFP-48</footprint>
+      <libsource lib="eleph" part="STM32F103C8T6" description="32-bit ARM Cortex-M3, 64KB Flash, 20KB SRAM, LQFP-48"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605A8B3E</tstamp>
+    </comp>
+    <comp ref="XTAL1">
+      <value>Crystal_8MHz</value>
+      <footprint>eleph:HC49SM</footprint>
+      <libsource lib="eleph" part="Crystal_8MHz" description="HC-49SM"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605AA906</tstamp>
+    </comp>
+    <comp ref="U5">
+      <value>HC-12</value>
+      <footprint>eleph:HC-12</footprint>
+      <libsource lib="eleph" part="HC-12" description="433 MHz radio module with UART interface"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605AD2E1</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>TP4056</value>
+      <footprint>eleph:TP4056</footprint>
+      <libsource lib="eleph" part="TP4056" description="Li-Ion battery charger module with protection, USB-Micro"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605AE333</tstamp>
+    </comp>
+    <comp ref="U3">
+      <value>TPS73633DBV</value>
+      <footprint>eleph:SOT-23-5</footprint>
+      <libsource lib="eleph" part="TPS73633DBV" description="3.3V fixed 400-mA Low-Dropout Regulator in SOT-23-5"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605AEEB8</tstamp>
+    </comp>
+    <comp ref="Q2">
+      <value>AO3400</value>
+      <footprint>eleph:SOT-23</footprint>
+      <libsource lib="eleph" part="AO3400" description="30V N-Channel MOSFET, SOT23"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605AF64D</tstamp>
+    </comp>
+    <comp ref="Q1">
+      <value>AO3407A</value>
+      <footprint>eleph:SOT-23</footprint>
+      <libsource lib="eleph" part="AO3407A" description="30V P-Channel MOSFET, SOT23"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605B006B</tstamp>
+    </comp>
+    <comp ref="U2">
+      <value>M24C64WMN</value>
+      <footprint>eleph:SOIC-8</footprint>
+      <libsource lib="eleph" part="M24C64WMN" description="64-Kbit serial I2C bus EEPROM"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605B0BB0</tstamp>
+    </comp>
+    <comp ref="X1">
+      <value>Pad_oval</value>
+      <footprint>eleph:Pad_oval</footprint>
+      <libsource lib="eleph" part="Pad_oval" description="SMT pad with plated hole"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605B1C99</tstamp>
+    </comp>
+    <comp ref="LS1">
+      <value>Buzzer</value>
+      <footprint>eleph:Buzzer_pitch7.6mm</footprint>
+      <libsource lib="eleph" part="Buzzer" description="Passive piezo buzzer, diameter 12mm, pitch 7.6mm"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605B36BC</tstamp>
+    </comp>
+    <comp ref="SW4">
+      <value>OK</value>
+      <footprint>eleph:6x6switch_smd</footprint>
+      <libsource lib="eleph" part="Button" description="6x6mm SMD tact switch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605B48DE</tstamp>
+    </comp>
+    <comp ref="X2">
+      <value>Pad_oval</value>
+      <footprint>eleph:Pad_oval</footprint>
+      <libsource lib="eleph" part="Pad_oval" description="SMT pad with plated hole"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605BA02D</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>10n</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605BAB00</tstamp>
+    </comp>
+    <comp ref="R3">
+      <value>100k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605C6006</tstamp>
+    </comp>
+    <comp ref="SW1">
+      <value>Power On</value>
+      <footprint>eleph:52x52switch_smd_lowprofile</footprint>
+      <libsource lib="eleph" part="Button" description="6x6mm SMD tact switch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605C6BD7</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>100k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605C7D38</tstamp>
+    </comp>
+    <comp ref="R5">
+      <value>100k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605C876A</tstamp>
+    </comp>
+    <comp ref="R6">
+      <value>100k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605C90BE</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>20p</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605C93D4</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>20p</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605CA1F4</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>10u</value>
+      <footprint>eleph:C_tantA</footprint>
+      <libsource lib="eleph" part="C_pol" description="Polarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605CA7F0</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>4.7k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605CB1CC</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>4.7k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605CBD3D</tstamp>
+    </comp>
+    <comp ref="R7">
+      <value>1k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605CBF76</tstamp>
+    </comp>
+    <comp ref="R8">
+      <value>1k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605CC9F7</tstamp>
+    </comp>
+    <comp ref="R9">
+      <value>1k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605DE897</tstamp>
+    </comp>
+    <comp ref="SW5">
+      <value>UP</value>
+      <footprint>eleph:6x6switch_smd</footprint>
+      <libsource lib="eleph" part="Button" description="6x6mm SMD tact switch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605FA62C</tstamp>
+    </comp>
+    <comp ref="SW6">
+      <value>DN</value>
+      <footprint>eleph:6x6switch_smd</footprint>
+      <libsource lib="eleph" part="Button" description="6x6mm SMD tact switch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605FB2E3</tstamp>
+    </comp>
+    <comp ref="SW2">
+      <value>LCK</value>
+      <footprint>eleph:6x6switch_smd</footprint>
+      <libsource lib="eleph" part="Button" description="6x6mm SMD tact switch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605FC588</tstamp>
+    </comp>
+    <comp ref="SW3">
+      <value>ESC</value>
+      <footprint>eleph:6x6switch_smd</footprint>
+      <libsource lib="eleph" part="Button" description="6x6mm SMD tact switch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605FCCE0</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>100n</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6068E7E5</tstamp>
+    </comp>
+    <comp ref="C7">
+      <value>100n</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>606FC7ED</tstamp>
+    </comp>
+    <comp ref="C8">
+      <value>100n</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>606FCFAD</tstamp>
+    </comp>
+    <comp ref="C9">
+      <value>100n</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>606FD210</tstamp>
+    </comp>
+    <comp ref="C10">
+      <value>100n</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>606FD764</tstamp>
+    </comp>
+    <comp ref="X3">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60766B27</tstamp>
+    </comp>
+    <comp ref="X4">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60767546</tstamp>
+    </comp>
+    <comp ref="X8">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>609EA902</tstamp>
+    </comp>
+    <comp ref="C12">
+      <value>100n</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>608BE782</tstamp>
+    </comp>
+    <comp ref="C13">
+      <value>100n</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>608BDCEF</tstamp>
+    </comp>
+    <comp ref="U6">
+      <value>GN-801</value>
+      <footprint>eleph:GN-801</footprint>
+      <libsource lib="eleph" part="GN-801" description="Ublox M8N-based GNSS receiver"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605AC95B</tstamp>
+    </comp>
+    <comp ref="U7">
+      <value>0.96_OLED_SSD1306</value>
+      <footprint>eleph:0.96_OLED_SSD1306_7pin</footprint>
+      <libsource lib="eleph" part="0.96_OLED_SSD1306" description="7-pin LCD module"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605AB78F</tstamp>
+    </comp>
+    <comp ref="R13">
+      <value>100k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60B1BF38</tstamp>
+    </comp>
+    <comp ref="R12">
+      <value>DNP</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60B27E29</tstamp>
+    </comp>
+    <comp ref="R14">
+      <value>100k</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60B283C7</tstamp>
+    </comp>
+    <comp ref="X11">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60CB98F7</tstamp>
+    </comp>
+    <comp ref="X12">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60CB9AD7</tstamp>
+    </comp>
+    <comp ref="X13">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60CB9C88</tstamp>
+    </comp>
+    <comp ref="X14">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60CB9EC1</tstamp>
+    </comp>
+    <comp ref="X15">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60CBA07B</tstamp>
+    </comp>
+    <comp ref="X16">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60CBA278</tstamp>
+    </comp>
+    <comp ref="X10">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60CB8BDB</tstamp>
+    </comp>
+    <comp ref="X9">
+      <value>PLS-1x6</value>
+      <footprint>eleph:1x6header</footprint>
+      <libsource lib="eleph" part="PLS-1x6" description="PLS pin header"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60E0D22E</tstamp>
+    </comp>
+    <comp ref="X17">
+      <value>Pad_oval</value>
+      <footprint>eleph:Antenna_terminal</footprint>
+      <libsource lib="eleph" part="Pad_oval" description="SMT pad with plated hole"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60F66884</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>Led_green</value>
+      <footprint>eleph:D1206</footprint>
+      <libsource lib="eleph" part="Led_green" description="smd, 1206 imperial"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605CDF91</tstamp>
+    </comp>
+    <comp ref="D2">
+      <value>Led_red</value>
+      <footprint>eleph:D1206</footprint>
+      <libsource lib="eleph" part="Led_red" description="smd, 1206 imperial"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>605CF7C5</tstamp>
+    </comp>
+    <comp ref="C6">
+      <value>10u</value>
+      <footprint>eleph:C_tantA</footprint>
+      <libsource lib="eleph" part="C_pol" description="Polarized capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6065F83A</tstamp>
+    </comp>
+    <comp ref="R10">
+      <value>DNP</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60771E7E</tstamp>
+    </comp>
+    <comp ref="R11">
+      <value>DNP</value>
+      <footprint>eleph:R0805</footprint>
+      <libsource lib="eleph" part="R" description="Resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60852B08</tstamp>
+    </comp>
+    <comp ref="C11">
+      <value>100n</value>
+      <footprint>eleph:C0805</footprint>
+      <libsource lib="eleph" part="C" description="Capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>60875F5C</tstamp>
+    </comp>
+    <comp ref="X6">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6075C282</tstamp>
+    </comp>
+    <comp ref="X5">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6075DC63</tstamp>
+    </comp>
+    <comp ref="X7">
+      <value>Pad_round</value>
+      <footprint>eleph:Pad_round</footprint>
+      <libsource lib="eleph" part="Pad_round" description="SMT pad"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>6075DFE7</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="eleph" part="0.96_OLED_SSD1306">
+      <description>7-pin LCD module</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">0.96_OLED_SSD1306</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="unspc"/>
+        <pin num="2" name="VDD" type="unspc"/>
+        <pin num="3" name="SCK" type="unspc"/>
+        <pin num="4" name="SDA" type="unspc"/>
+        <pin num="5" name="RES" type="unspc"/>
+        <pin num="6" name="DC" type="unspc"/>
+        <pin num="7" name="CS" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="AO3400">
+      <description>30V N-Channel MOSFET, SOT23</description>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">AO3400</field>
+      </fields>
+      <pins>
+        <pin num="1" name="G" type="unspc"/>
+        <pin num="2" name="S" type="unspc"/>
+        <pin num="3" name="D" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="AO3407A">
+      <description>30V P-Channel MOSFET, SOT23</description>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">AO3407A</field>
+      </fields>
+      <pins>
+        <pin num="1" name="G" type="unspc"/>
+        <pin num="2" name="S" type="unspc"/>
+        <pin num="3" name="D" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="Button">
+      <description>6x6mm SMD tact switch</description>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">Button</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+        <pin num="3" name="3" type="unspc"/>
+        <pin num="4" name="4" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="Buzzer">
+      <description>Passive piezo buzzer, diameter 12mm, pitch 7.6mm</description>
+      <fields>
+        <field name="Reference">LS</field>
+        <field name="Value">Buzzer</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="C">
+      <description>Capacitor</description>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="C_pol">
+      <description>Polarized capacitor</description>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C_pol</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="Crystal_8MHz">
+      <description>HC-49SM</description>
+      <fields>
+        <field name="Reference">XTAL</field>
+        <field name="Value">Crystal_8MHz</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="GN-801">
+      <description>Ublox M8N-based GNSS receiver</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">GN-801</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="unspc"/>
+        <pin num="2" name="VCC" type="unspc"/>
+        <pin num="3" name="TXD" type="unspc"/>
+        <pin num="4" name="RXD" type="unspc"/>
+        <pin num="5" name="PPS" type="unspc"/>
+        <pin num="6" name="EN" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="HC-12">
+      <description>433 MHz radio module with UART interface</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">HC-12</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VCC" type="unspc"/>
+        <pin num="2" name="GND" type="unspc"/>
+        <pin num="3" name="RXD" type="unspc"/>
+        <pin num="4" name="TXD" type="unspc"/>
+        <pin num="5" name="SET" type="unspc"/>
+        <pin num="6" name="GND" type="unspc"/>
+        <pin num="7" name="ANT" type="unspc"/>
+        <pin num="8" name="GND" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="Led_green">
+      <description>smd, 1206 imperial</description>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">Led_green</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="unspc"/>
+        <pin num="2" name="A" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="Led_red">
+      <description>smd, 1206 imperial</description>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">Led_red</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="unspc"/>
+        <pin num="2" name="A" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="M24C64WMN">
+      <description>64-Kbit serial I2C bus EEPROM</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">M24C64WMN</field>
+      </fields>
+      <pins>
+        <pin num="1" name="E0" type="unspc"/>
+        <pin num="2" name="E1" type="unspc"/>
+        <pin num="3" name="E2" type="unspc"/>
+        <pin num="4" name="VSS" type="unspc"/>
+        <pin num="5" name="SDA" type="unspc"/>
+        <pin num="6" name="SCL" type="unspc"/>
+        <pin num="7" name="~WC" type="unspc"/>
+        <pin num="8" name="VCC" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="PLS-1x6">
+      <description>PLS pin header</description>
+      <fields>
+        <field name="Reference">X</field>
+        <field name="Value">PLS-1x6</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+        <pin num="3" name="3" type="unspc"/>
+        <pin num="4" name="4" type="unspc"/>
+        <pin num="5" name="5" type="unspc"/>
+        <pin num="6" name="6" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="Pad_oval">
+      <description>SMT pad with plated hole</description>
+      <fields>
+        <field name="Reference">X</field>
+        <field name="Value">Pad_oval</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="Pad_round">
+      <description>SMT pad</description>
+      <fields>
+        <field name="Reference">X</field>
+        <field name="Value">Pad_round</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="R">
+      <description>Resistor</description>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="unspc"/>
+        <pin num="2" name="2" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="STM32F103C8T6">
+      <description>32-bit ARM Cortex-M3, 64KB Flash, 20KB SRAM, LQFP-48</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">STM32F103C8T6</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VBAT" type="unspc"/>
+        <pin num="2" name="PC13" type="unspc"/>
+        <pin num="3" name="PC14" type="unspc"/>
+        <pin num="4" name="PC15" type="unspc"/>
+        <pin num="5" name="PD0" type="unspc"/>
+        <pin num="6" name="PD1" type="unspc"/>
+        <pin num="7" name="NRST" type="unspc"/>
+        <pin num="8" name="VSSA" type="unspc"/>
+        <pin num="9" name="VDDA" type="unspc"/>
+        <pin num="10" name="PA0" type="unspc"/>
+        <pin num="11" name="PA1" type="unspc"/>
+        <pin num="12" name="PA2" type="unspc"/>
+        <pin num="13" name="PA3" type="unspc"/>
+        <pin num="14" name="PA4" type="unspc"/>
+        <pin num="15" name="PA5" type="unspc"/>
+        <pin num="16" name="PA6" type="unspc"/>
+        <pin num="17" name="PA7" type="unspc"/>
+        <pin num="18" name="PB0" type="unspc"/>
+        <pin num="19" name="PB1" type="unspc"/>
+        <pin num="20" name="PB2" type="unspc"/>
+        <pin num="21" name="PB10" type="unspc"/>
+        <pin num="22" name="PB11" type="unspc"/>
+        <pin num="23" name="VSS_1" type="unspc"/>
+        <pin num="24" name="VDD_1" type="unspc"/>
+        <pin num="25" name="PB12" type="unspc"/>
+        <pin num="26" name="PB13" type="unspc"/>
+        <pin num="27" name="PB14" type="unspc"/>
+        <pin num="28" name="PB15" type="unspc"/>
+        <pin num="29" name="PA8" type="unspc"/>
+        <pin num="30" name="PA9" type="unspc"/>
+        <pin num="31" name="PA10" type="unspc"/>
+        <pin num="32" name="PA11" type="unspc"/>
+        <pin num="33" name="PA12" type="unspc"/>
+        <pin num="34" name="PA13" type="unspc"/>
+        <pin num="35" name="VSS_2" type="unspc"/>
+        <pin num="36" name="VDD_2" type="unspc"/>
+        <pin num="37" name="PA14" type="unspc"/>
+        <pin num="38" name="PA15" type="unspc"/>
+        <pin num="39" name="PB3" type="unspc"/>
+        <pin num="40" name="PB4" type="unspc"/>
+        <pin num="41" name="PB5" type="unspc"/>
+        <pin num="42" name="PB6" type="unspc"/>
+        <pin num="43" name="PB7" type="unspc"/>
+        <pin num="44" name="BOOT0" type="unspc"/>
+        <pin num="45" name="PB8" type="unspc"/>
+        <pin num="46" name="PB9" type="unspc"/>
+        <pin num="47" name="VSS_3" type="unspc"/>
+        <pin num="48" name="VDD_3" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="TP4056">
+      <description>Li-Ion battery charger module with protection, USB-Micro</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">TP4056</field>
+      </fields>
+      <pins>
+        <pin num="1" name="IN+" type="unspc"/>
+        <pin num="2" name="IN-" type="unspc"/>
+        <pin num="3" name="OUT-" type="unspc"/>
+        <pin num="4" name="B-" type="unspc"/>
+        <pin num="5" name="B+" type="unspc"/>
+        <pin num="6" name="OUT+" type="unspc"/>
+      </pins>
+    </libpart>
+    <libpart lib="eleph" part="TPS73633DBV">
+      <description>3.3V fixed 400-mA Low-Dropout Regulator in SOT-23-5</description>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">TPS73633DBV</field>
+      </fields>
+      <pins>
+        <pin num="1" name="IN" type="unspc"/>
+        <pin num="2" name="GND" type="unspc"/>
+        <pin num="3" name="EN" type="unspc"/>
+        <pin num="4" name="NR" type="unspc"/>
+        <pin num="5" name="OUT" type="unspc"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="eleph">
+      <uri>D:\Projects\LRNS\HW_rev2\eleph\eleph/eleph.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="+3V3">
+      <node ref="C6" pin="1"/>
+      <node ref="C8" pin="1"/>
+      <node ref="C7" pin="1"/>
+      <node ref="C9" pin="1"/>
+      <node ref="C10" pin="1"/>
+      <node ref="U4" pin="48"/>
+      <node ref="U4" pin="36"/>
+      <node ref="U4" pin="24"/>
+      <node ref="U3" pin="5"/>
+      <node ref="U2" pin="8"/>
+      <node ref="U4" pin="9"/>
+      <node ref="U5" pin="1"/>
+      <node ref="U4" pin="1"/>
+      <node ref="C11" pin="2"/>
+      <node ref="R12" pin="1"/>
+      <node ref="R11" pin="2"/>
+      <node ref="X9" pin="1"/>
+      <node ref="R1" pin="1"/>
+      <node ref="C5" pin="1"/>
+      <node ref="R2" pin="1"/>
+      <node ref="C12" pin="1"/>
+      <node ref="C13" pin="1"/>
+      <node ref="U7" pin="2"/>
+      <node ref="U6" pin="2"/>
+    </net>
+    <net code="2" name="GND">
+      <node ref="C13" pin="2"/>
+      <node ref="C12" pin="2"/>
+      <node ref="U4" pin="35"/>
+      <node ref="U4" pin="47"/>
+      <node ref="U4" pin="23"/>
+      <node ref="C11" pin="1"/>
+      <node ref="R6" pin="2"/>
+      <node ref="X9" pin="6"/>
+      <node ref="X9" pin="2"/>
+      <node ref="C3" pin="1"/>
+      <node ref="R14" pin="1"/>
+      <node ref="C4" pin="2"/>
+      <node ref="SW4" pin="4"/>
+      <node ref="SW1" pin="4"/>
+      <node ref="R13" pin="2"/>
+      <node ref="R4" pin="2"/>
+      <node ref="C5" pin="2"/>
+      <node ref="C2" pin="1"/>
+      <node ref="SW3" pin="4"/>
+      <node ref="SW2" pin="4"/>
+      <node ref="SW6" pin="4"/>
+      <node ref="SW5" pin="4"/>
+      <node ref="U4" pin="8"/>
+      <node ref="U1" pin="3"/>
+      <node ref="U5" pin="8"/>
+      <node ref="U5" pin="6"/>
+      <node ref="U5" pin="2"/>
+      <node ref="U2" pin="7"/>
+      <node ref="U2" pin="4"/>
+      <node ref="U2" pin="3"/>
+      <node ref="U2" pin="2"/>
+      <node ref="Q2" pin="2"/>
+      <node ref="U3" pin="2"/>
+      <node ref="C1" pin="2"/>
+      <node ref="U2" pin="1"/>
+      <node ref="D1" pin="1"/>
+      <node ref="D2" pin="1"/>
+      <node ref="C10" pin="2"/>
+      <node ref="U7" pin="1"/>
+      <node ref="C9" pin="2"/>
+      <node ref="C8" pin="2"/>
+      <node ref="R10" pin="2"/>
+      <node ref="C6" pin="2"/>
+      <node ref="C7" pin="2"/>
+      <node ref="U6" pin="1"/>
+    </net>
+    <net code="3" name="PPS">
+      <node ref="U6" pin="5"/>
+      <node ref="U4" pin="32"/>
+    </net>
+    <net code="4" name="/RF_CTS">
+      <node ref="U4" pin="33"/>
+      <node ref="X15" pin="1"/>
+    </net>
+    <net code="5" name="/RF_SDN">
+      <node ref="U4" pin="43"/>
+      <node ref="X10" pin="1"/>
+    </net>
+    <net code="6" name="/RF_IRQ">
+      <node ref="U4" pin="42"/>
+      <node ref="X11" pin="1"/>
+    </net>
+    <net code="7" name="/RF_MOSI">
+      <node ref="U4" pin="41"/>
+      <node ref="X13" pin="1"/>
+    </net>
+    <net code="8" name="/RF_MISO">
+      <node ref="X12" pin="1"/>
+      <node ref="U4" pin="40"/>
+    </net>
+    <net code="9" name="/RF_SCK">
+      <node ref="X14" pin="1"/>
+      <node ref="U4" pin="39"/>
+    </net>
+    <net code="10" name="/RF_CS">
+      <node ref="U4" pin="38"/>
+      <node ref="X16" pin="1"/>
+    </net>
+    <net code="11" name="Net-(U6-Pad6)">
+      <node ref="U6" pin="6"/>
+    </net>
+    <net code="12" name="/LCD_RES">
+      <node ref="U4" pin="29"/>
+      <node ref="U7" pin="5"/>
+    </net>
+    <net code="13" name="HOLD">
+      <node ref="U4" pin="46"/>
+      <node ref="R4" pin="1"/>
+      <node ref="Q2" pin="1"/>
+    </net>
+    <net code="14" name="Net-(U4-Pad45)">
+      <node ref="X8" pin="1"/>
+      <node ref="U4" pin="45"/>
+    </net>
+    <net code="15" name="/LCD_CS">
+      <node ref="U7" pin="7"/>
+      <node ref="U4" pin="25"/>
+    </net>
+    <net code="16" name="/LCD_SCK">
+      <node ref="U7" pin="3"/>
+      <node ref="U4" pin="26"/>
+    </net>
+    <net code="17" name="/LCD_DC">
+      <node ref="U4" pin="27"/>
+      <node ref="U7" pin="6"/>
+    </net>
+    <net code="18" name="/LCD_SDA">
+      <node ref="U7" pin="4"/>
+      <node ref="U4" pin="28"/>
+    </net>
+    <net code="19" name="BTN_LCK">
+      <node ref="SW2" pin="1"/>
+      <node ref="U4" pin="14"/>
+    </net>
+    <net code="20" name="BTN_ESC">
+      <node ref="SW3" pin="1"/>
+      <node ref="U4" pin="15"/>
+    </net>
+    <net code="21" name="LED_GRN">
+      <node ref="R7" pin="1"/>
+      <node ref="U4" pin="18"/>
+    </net>
+    <net code="22" name="LED_RED">
+      <node ref="R8" pin="1"/>
+      <node ref="U4" pin="19"/>
+    </net>
+    <net code="23" name="I2C_SDA">
+      <node ref="X4" pin="1"/>
+      <node ref="R2" pin="2"/>
+      <node ref="U4" pin="22"/>
+      <node ref="U2" pin="5"/>
+    </net>
+    <net code="24" name="BOOT0">
+      <node ref="U4" pin="44"/>
+      <node ref="R12" pin="2"/>
+      <node ref="R14" pin="2"/>
+    </net>
+    <net code="25" name="BOOT1">
+      <node ref="R13" pin="1"/>
+      <node ref="U4" pin="20"/>
+    </net>
+    <net code="26" name="Net-(SW1-Pad3)">
+      <node ref="SW1" pin="3"/>
+    </net>
+    <net code="27" name="Net-(SW5-Pad2)">
+      <node ref="SW5" pin="2"/>
+    </net>
+    <net code="28" name="Net-(U5-Pad3)">
+      <node ref="U5" pin="3"/>
+    </net>
+    <net code="29" name="Net-(U5-Pad4)">
+      <node ref="U5" pin="4"/>
+    </net>
+    <net code="30" name="Net-(U5-Pad5)">
+      <node ref="U5" pin="5"/>
+    </net>
+    <net code="31" name="Net-(U5-Pad7)">
+      <node ref="U5" pin="7"/>
+      <node ref="X17" pin="1"/>
+    </net>
+    <net code="32" name="Net-(U1-Pad1)">
+      <node ref="U1" pin="1"/>
+    </net>
+    <net code="33" name="Net-(U1-Pad2)">
+      <node ref="U1" pin="2"/>
+    </net>
+    <net code="34" name="BTN_PWR">
+      <node ref="SW1" pin="2"/>
+      <node ref="R3" pin="2"/>
+      <node ref="Q1" pin="1"/>
+      <node ref="Q2" pin="3"/>
+    </net>
+    <net code="35" name="Net-(SW1-Pad1)">
+      <node ref="SW1" pin="1"/>
+    </net>
+    <net code="36" name="Net-(U4-Pad3)">
+      <node ref="U4" pin="3"/>
+      <node ref="X6" pin="1"/>
+    </net>
+    <net code="37" name="Net-(U4-Pad2)">
+      <node ref="X5" pin="1"/>
+      <node ref="U4" pin="2"/>
+    </net>
+    <net code="38" name="Net-(U4-Pad4)">
+      <node ref="U4" pin="4"/>
+      <node ref="X7" pin="1"/>
+    </net>
+    <net code="39" name="Net-(SW5-Pad3)">
+      <node ref="SW5" pin="3"/>
+    </net>
+    <net code="40" name="/RESET">
+      <node ref="X9" pin="5"/>
+      <node ref="U4" pin="7"/>
+    </net>
+    <net code="41" name="/NMEA">
+      <node ref="U6" pin="3"/>
+      <node ref="U4" pin="31"/>
+    </net>
+    <net code="42" name="/CONF">
+      <node ref="U4" pin="30"/>
+      <node ref="U6" pin="4"/>
+    </net>
+    <net code="43" name="/SWCLK">
+      <node ref="U4" pin="37"/>
+      <node ref="X9" pin="3"/>
+    </net>
+    <net code="44" name="/SWDIO">
+      <node ref="X9" pin="4"/>
+      <node ref="U4" pin="34"/>
+    </net>
+    <net code="45" name="Net-(SW2-Pad2)">
+      <node ref="SW2" pin="2"/>
+    </net>
+    <net code="46" name="Net-(SW2-Pad3)">
+      <node ref="SW2" pin="3"/>
+    </net>
+    <net code="47" name="Net-(SW3-Pad2)">
+      <node ref="SW3" pin="2"/>
+    </net>
+    <net code="48" name="Net-(SW3-Pad3)">
+      <node ref="SW3" pin="3"/>
+    </net>
+    <net code="49" name="Net-(SW4-Pad3)">
+      <node ref="SW4" pin="3"/>
+    </net>
+    <net code="50" name="Net-(SW4-Pad2)">
+      <node ref="SW4" pin="2"/>
+    </net>
+    <net code="51" name="Net-(SW6-Pad3)">
+      <node ref="SW6" pin="3"/>
+    </net>
+    <net code="52" name="Net-(SW6-Pad2)">
+      <node ref="SW6" pin="2"/>
+    </net>
+    <net code="53" name="BTN_OK">
+      <node ref="U4" pin="13"/>
+      <node ref="SW4" pin="1"/>
+    </net>
+    <net code="54" name="Net-(D1-Pad2)">
+      <node ref="D1" pin="2"/>
+      <node ref="R7" pin="2"/>
+    </net>
+    <net code="55" name="Net-(D2-Pad2)">
+      <node ref="D2" pin="2"/>
+      <node ref="R8" pin="2"/>
+    </net>
+    <net code="56" name="Net-(Q1-Pad2)">
+      <node ref="U1" pin="6"/>
+      <node ref="Q1" pin="2"/>
+      <node ref="R3" pin="1"/>
+    </net>
+    <net code="57" name="I2C_SCL">
+      <node ref="X3" pin="1"/>
+      <node ref="U4" pin="21"/>
+      <node ref="U2" pin="6"/>
+      <node ref="R1" pin="2"/>
+    </net>
+    <net code="58" name="BUZZER_P">
+      <node ref="U4" pin="16"/>
+      <node ref="R9" pin="1"/>
+    </net>
+    <net code="59" name="BUZZER_N">
+      <node ref="LS1" pin="2"/>
+      <node ref="U4" pin="17"/>
+    </net>
+    <net code="60" name="BTN_UP">
+      <node ref="SW5" pin="1"/>
+      <node ref="U4" pin="11"/>
+    </net>
+    <net code="61" name="BTN_DN">
+      <node ref="U4" pin="12"/>
+      <node ref="SW6" pin="1"/>
+    </net>
+    <net code="62" name="Net-(C2-Pad2)">
+      <node ref="U4" pin="5"/>
+      <node ref="XTAL1" pin="1"/>
+      <node ref="C2" pin="2"/>
+    </net>
+    <net code="63" name="Net-(C4-Pad1)">
+      <node ref="C4" pin="1"/>
+      <node ref="R11" pin="1"/>
+      <node ref="R10" pin="1"/>
+      <node ref="U3" pin="4"/>
+    </net>
+    <net code="64" name="Net-(LS1-Pad1)">
+      <node ref="R9" pin="2"/>
+      <node ref="LS1" pin="1"/>
+    </net>
+    <net code="65" name="Net-(U1-Pad4)">
+      <node ref="U1" pin="4"/>
+      <node ref="X2" pin="1"/>
+    </net>
+    <net code="66" name="Net-(U1-Pad5)">
+      <node ref="X1" pin="1"/>
+      <node ref="U1" pin="5"/>
+    </net>
+    <net code="67" name="+BATT">
+      <node ref="U3" pin="1"/>
+      <node ref="R5" pin="1"/>
+      <node ref="Q1" pin="3"/>
+      <node ref="U3" pin="3"/>
+    </net>
+    <net code="68" name="Net-(C3-Pad2)">
+      <node ref="U4" pin="6"/>
+      <node ref="XTAL1" pin="2"/>
+      <node ref="C3" pin="2"/>
+    </net>
+    <net code="69" name="BAT_ADC">
+      <node ref="R6" pin="1"/>
+      <node ref="R5" pin="2"/>
+      <node ref="U4" pin="10"/>
+      <node ref="C1" pin="1"/>
+    </net>
+  </nets>
+</export>

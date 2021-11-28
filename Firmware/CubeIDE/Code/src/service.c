@@ -10,7 +10,17 @@
 #include <string.h>
 #include "stm32f10x.h"
 #include "service.h"
+#include "ssd1306.h"
 
+
+
+void debug_message(char *message)
+{
+	ssd1306_clear();
+	ssd1306_print(0, 0, message, 0);
+	ssd1306_update();
+	delay_cyc(200000);
+}
 
 
 

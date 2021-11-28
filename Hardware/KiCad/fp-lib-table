@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name valenok)(type KiCad)(uri D:/Projects/AVR/Lera_Thermo/hardware/valenok/valenok.pretty)(options "")(descr ""))
+  (lib (name eleph)(type KiCad)(uri ${KIPRJMOD}/eleph.pretty)(options "")(descr ""))
+)

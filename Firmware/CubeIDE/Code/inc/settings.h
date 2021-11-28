@@ -30,9 +30,9 @@
 
 
 //POWER SETTINGS
-#define TX_POWER_10MILLIW_SETTING   (0)
-#define TX_POWER_25MILLIW_SETTING   (1)
-#define TX_POWER_40MILLIW_SETTING   (2)
+#define TX_POWER_1MILLIW_SETTING   	(0)
+#define TX_POWER_10MILLIW_SETTING   (1)
+#define TX_POWER_50MILLIW_SETTING   (2)
 #define TX_POWER_100MILLIW_SETTING  (3)
 
 
@@ -41,6 +41,8 @@
 struct settings_struct
 {
     uint8_t device_number;              //this device number in group, 1...DEVICES_IN_GROUP
+
+    uint8_t devices_on_air;				//total number of devices on air, 1...DEVICES_IN_GROUP
 
     char device_id[DEVICE_ID_LEN];      //user id, ASCII symbols
 

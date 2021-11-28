@@ -1,0 +1,8 @@
+rfm98.c:50:6:rfm98_init	104	static
+rfm98.c:164:9:rfm98_tx_packet	16	static
+rfm98.c:207:9:rfm98_start_rx	16	static
+rfm98.c:239:9:rfm98_get_irq_status	8	static
+rfm98.c:258:6:rfm98_get_rx_packet	24	static
+rfm98.c:275:6:rfm98_flush_fifo	8	static
+rfm98.c:289:10:get_air_packet_tx	4	static
+rfm98.c:296:10:get_air_packet_rx	4	static

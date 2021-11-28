@@ -4,23 +4,25 @@
 	Copyright (C) 2021 Feruz Topalov
 	Released under the GNU General Public License v3.0 <https://www.gnu.org/licenses/>
     
-    file: si4463.h
+    file: rfm98.h
 */
 
 
 
-#ifndef SI4463_HEADER
-#define SI4463_HEADER
+#ifndef RFM98_HEADER
+#define RFM98_HEADER
 
 
 
-void si4463_init(void);
-void si4463_tx_packet(void);
-void si4463_start_rx(void);
-uint8_t si4463_get_rx_packet(void);
+void rfm98_init(void);
+uint8_t rfm98_tx_packet(void);
+uint8_t rfm98_get_irq_status(void);
+uint8_t rfm98_start_rx(void);
+void rfm98_flush_fifo(void);
+void rfm98_get_rx_packet(void);
 uint8_t *get_air_packet_tx(void);
 uint8_t *get_air_packet_rx(void);
 
 
 
-#endif /*SI4463_HEADER*/
+#endif /*RFM98_HEADER*/
