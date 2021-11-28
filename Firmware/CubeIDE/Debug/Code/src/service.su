@@ -1,7 +1,8 @@
-service.c:18:6:convert_timeout	40	static
-service.c:149:6:delay_cyc	16	static
-service.c:160:6:copy_string	16	static
-service.c:172:7:atof32	40	static
-service.c:211:6:ftoa32	64	static
-service.c:289:9:atoi32	32	static
-service.c:323:6:itoa32	24	static
+service.c:17:6:debug_message	16	static
+service.c:28:6:convert_timeout	40	static
+service.c:159:6:delay_cyc	16	static
+service.c:170:6:copy_string	16	static
+service.c:182:7:atof32	40	static
+service.c:221:6:ftoa32	64	static
+service.c:299:9:atoi32	32	static
+service.c:333:6:itoa32	24	static

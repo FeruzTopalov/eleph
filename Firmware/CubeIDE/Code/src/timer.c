@@ -16,6 +16,8 @@
 
 void systick_init(void);
 void systick_start(void);
+void systick_set_100ms(void);
+void systick_set_1000ms(void);
 void rtc_init(void);
 void timer1_init(void);
 void timer1_clock_disable(void);
@@ -49,6 +51,20 @@ void make_a_beep(void)
 	{
 		timer3_clock_enable();
 		timer3_start();		//pwm
+		systick_set_100ms();
+		systick_start();	//gating
+	}
+}
+
+
+
+void make_a_long_beep(void)
+{
+	if (beep_mute == 0)
+	{
+		timer3_clock_enable();
+		timer3_start();		//pwm
+		systick_set_1000ms();
 		systick_start();	//gating
 	}
 }
@@ -107,13 +123,29 @@ void rtc_init(void)
 
 
 
-//SysTick timer init (tick every 1s to count uptime)
+//SysTick timer init
 void systick_init(void)
 {
     SysTick->CTRL &= ~SysTick_CTRL_CLKSOURCE_Msk;   //clock source = AHB/8 = 3MHz/8 = 375 kHz
     SysTick->LOAD = (uint32_t)37499;              	//375000Hz/(37499+1)=10Hz
     SysTick->VAL = 0;                               //reset counter value
     SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;      //enable interrupt
+}
+
+
+
+void systick_set_100ms(void)
+{
+	SysTick->LOAD = (uint32_t)37499;              	//375000Hz/(37499+1)=10Hz
+	SysTick->VAL = 0;
+}
+
+
+
+void systick_set_1000ms(void)
+{
+	SysTick->LOAD = (uint32_t)374999;              	//375000Hz/(374999+1)=10Hz
+	SysTick->VAL = 0;
 }
 
 
@@ -139,7 +171,7 @@ void timer1_init(void)
 {
     RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;     //enable timer 1 clock
     TIM1->PSC = (uint16_t)2999;            	// 3MHz/(2999+1)=1kHz
-    TIM1->ARR = (uint16_t)99;              	// 1kHz/(99+1)=10Hz(100ms)
+    TIM1->ARR = (uint16_t)124;              // 1kHz/(124+1)=8Hz(125ms)
     TIM1->CR1 |= TIM_CR1_URS;               //only overflow generates interrupt
     TIM1->EGR = TIM_EGR_UG;                 //software update generation
     TIM1->SR &= ~TIM_SR_UIF;                //clear update interrupt
@@ -205,11 +237,14 @@ void timer3_init(void)
 	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN; //enable timer clock
 	TIM3->PSC = (uint16_t)374;         	//3MHz/(374+1)=8kHz
 	TIM3->ARR = (uint16_t)3;            //8kHz/(3+1)=2kHz
+	TIM3->CCR1 = (uint16_t)2;           //duty cycle 2/(3+1)=0.5
 	TIM3->CCR2 = (uint16_t)2;           //duty cycle 2/(3+1)=0.5
-	TIM3->CCMR1 |= TIM_CCMR1_OC2M_2;    //PWM mode 2
+	TIM3->CCMR1 |= TIM_CCMR1_OC1M_2;    //PWM mode 1 for CH1
+	TIM3->CCMR1 |= TIM_CCMR1_OC1M_1;
+	TIM3->CCMR1 &= ~TIM_CCMR1_OC1M_0;
+	TIM3->CCMR1 |= TIM_CCMR1_OC2M_2;    //PWM mode 2 for CH2
 	TIM3->CCMR1 |= TIM_CCMR1_OC2M_1;
 	TIM3->CCMR1 |= TIM_CCMR1_OC2M_0;
-	TIM3->CCER |= TIM_CCER_CC2E;        //CH2 output enable
 
 	timer3_stop();
 	timer3_clock_disable();
@@ -235,11 +270,15 @@ void timer3_stop(void)
 {
 	TIM3->CR1 &= ~TIM_CR1_CEN;      //disable PWM timer
 	TIM3->CNT = 0;                  //force output low
+	TIM3->CCER &= ~TIM_CCER_CC1E;   //CH1 output disable
+	TIM3->CCER &= ~TIM_CCER_CC2E;   //CH2 output disable
 }
 
 
 
 void timer3_start(void)
 {
+	TIM3->CCER |= TIM_CCER_CC1E;   	//CH1 output enable
+	TIM3->CCER |= TIM_CCER_CC2E;    //CH2 output enable
 	TIM3->CR1 |= TIM_CR1_CEN;   	//enable PWM timer
 }

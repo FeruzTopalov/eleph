@@ -16,6 +16,7 @@
 
 void timers_init(void);
 void make_a_beep(void);
+void make_a_long_beep(void);
 void toggle_mute(void);
 uint8_t get_mute_flag(void);
 void systick_stop(void);

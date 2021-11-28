@@ -102,7 +102,6 @@ void adc_clock_enable(void)
 //Start ADC reading
 void adc_start_bat_voltage_reading(void)
 {
-	bat_mon_on();	//Enable resistive divider and wait a bit
 	adc_clock_enable();
 	delay_cyc(10);
 
@@ -115,8 +114,6 @@ void adc_start_bat_voltage_reading(void)
 //Read the ADC conversion result; return 1 if battery low is detected
 uint8_t adc_read_bat_voltage_result(void)
 {
-	bat_mon_off();	//Disable resistive divider
-
 	//Convert
 	bat_voltage = 2 * ((ADC1->DR * vref) / 4096);     //x2 due to resistive voltage divider before ADC input
 

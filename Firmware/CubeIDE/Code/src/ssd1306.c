@@ -39,7 +39,9 @@ const uint8_t ssd1306_conf[] =
 {// len,  val1, val2, ...
     0x02, 0x20, 0x00,           /* horizontal adressing */ \
     0x02, 0xA1, 0xC8,           /* invert orientation */ \
-    0x03, 0x8D, 0x14, 0xAF,     /* enable charge pump and display */ \
+	0x02, 0x81, 0xFF,			/* set contrast */ \
+    0x02, 0x8D, 0x14,		    /* enable charge pump */ \
+	0x01, 0xAF,     			/* enable display */ \
     0x00                        /* end of the sequence */
 };
 

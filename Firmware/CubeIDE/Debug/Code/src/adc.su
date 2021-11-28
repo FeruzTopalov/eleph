@@ -3,6 +3,6 @@ adc.c:48:6:adc_init	8	static
 adc.c:88:6:adc_clock_disable	4	static
 adc.c:95:6:adc_clock_enable	4	static
 adc.c:103:6:adc_start_bat_voltage_reading	8	static
-adc.c:116:9:adc_read_bat_voltage_result	8	static
-adc.c:154:6:adc_check_bat_voltage	8	static
-adc.c:168:7:get_bat_voltage_value	4	static
+adc.c:115:9:adc_read_bat_voltage_result	8	static
+adc.c:151:6:adc_check_bat_voltage	8	static
+adc.c:165:7:get_bat_voltage_value	4	static

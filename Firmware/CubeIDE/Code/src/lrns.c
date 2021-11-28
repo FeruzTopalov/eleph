@@ -18,7 +18,7 @@
 #include "gps.h"
 #include "points.h"
 #include "lrns.h"
-#include "si4463.h"
+#include "rfm98.h"
 #include "gpio.h"
 
 
@@ -211,7 +211,22 @@ void calc_timeout(uint32_t current_uptime)
     {
         if (dev_aux[dev].exist_flag == 1)
         {
-        	dev_aux[dev].timeout = current_uptime - dev_aux[dev].timestamp;
+        	dev_aux[dev].timeout = current_uptime - dev_aux[dev].timestamp; //calc timeout for each active device
+
+        	if (p_settings->timeout_threshold.as_integer != TIMEOUT_ALARM_DISABLED) //if enabled
+        	{
+        		if (dev_aux[dev].memory_point_flag == 0) //no timeout alarm for memory points
+        		{
+        			if (dev_aux[dev].timeout > p_settings->timeout_threshold.as_integer)
+        			{
+        				dev_aux[dev].timeout_flag = 1; //set flag for alarm
+        			}
+        			else
+        			{
+        				dev_aux[dev].timeout_flag = 0;
+        			}
+        		}
+        	}
         }
     }
 }
@@ -223,34 +238,19 @@ uint8_t check_timeout(void)
 {
 	uint8_t timeout_status = 0;
 
-	if (p_settings->timeout_threshold.as_integer != TIMEOUT_ALARM_DISABLED)
+	for (uint8_t dev = 1; dev <= DEVICES_IN_GROUP; dev++)
 	{
-		for (uint8_t dev = 1; dev <= DEVICES_IN_GROUP; dev++)
+		if (dev_aux[dev].exist_flag == 1)
 		{
-			if (dev_aux[dev].memory_point_flag == 0)	//no timeout alarm for memory points
+			if (dev_aux[dev].timeout_flag == 1)
 			{
-
-					if (dev_aux[dev].timeout > p_settings->timeout_threshold.as_integer)
-					{
-						dev_aux[dev].timeout_flag = 1;
-						timeout_status = 1;
-					}
-					else
-					{
-						dev_aux[dev].timeout_flag = 0;
-					}
+				timeout_status = 1;
+				break;
 			}
 		}
 	}
 
-    if (timeout_status == 1)
-    {
-    	return 1;
-    }
-    else
-    {
-    	return 0;
-    }
+    return timeout_status;
 }
 
 
@@ -292,13 +292,20 @@ uint8_t check_fence(void)
 
 void process_all_devices(void)
 {
+
 	for (uint8_t dev = 1; dev <= DEVICES_IN_GROUP; dev++)
 	{
-		if (dev_aux[dev].exist_flag == 1)	//process mem points too
+		if (dev == device_number)	//except this device
+		{
+			continue;
+		}
+
+		if (dev_aux[dev].exist_flag == 1)	//all existing
 		{
 			calc_relative_position(dev);
 		}
 	}
+
 }
 
 

@@ -14,9 +14,9 @@ C_SRCS += \
 ../Code/src/main.c \
 ../Code/src/menu.c \
 ../Code/src/points.c \
+../Code/src/rfm98.c \
 ../Code/src/service.c \
 ../Code/src/settings.c \
-../Code/src/si4463.c \
 ../Code/src/spi.c \
 ../Code/src/ssd1306.c \
 ../Code/src/ssd1306_bitmaps.c \
@@ -34,9 +34,9 @@ OBJS += \
 ./Code/src/main.o \
 ./Code/src/menu.o \
 ./Code/src/points.o \
+./Code/src/rfm98.o \
 ./Code/src/service.o \
 ./Code/src/settings.o \
-./Code/src/si4463.o \
 ./Code/src/spi.o \
 ./Code/src/ssd1306.o \
 ./Code/src/ssd1306_bitmaps.o \
@@ -54,9 +54,9 @@ C_DEPS += \
 ./Code/src/main.d \
 ./Code/src/menu.d \
 ./Code/src/points.d \
+./Code/src/rfm98.d \
 ./Code/src/service.d \
 ./Code/src/settings.d \
-./Code/src/si4463.d \
 ./Code/src/spi.d \
 ./Code/src/ssd1306.d \
 ./Code/src/ssd1306_bitmaps.d \
@@ -85,12 +85,12 @@ Code/src/menu.o: ../Code/src/menu.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/CMSIS/inc" -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Code/src/menu.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Code/src/points.o: ../Code/src/points.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/CMSIS/inc" -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Code/src/points.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
+Code/src/rfm98.o: ../Code/src/rfm98.c
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/CMSIS/inc" -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Code/src/rfm98.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Code/src/service.o: ../Code/src/service.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/CMSIS/inc" -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Code/src/service.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Code/src/settings.o: ../Code/src/settings.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/CMSIS/inc" -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Code/src/settings.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
-Code/src/si4463.o: ../Code/src/si4463.c
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/CMSIS/inc" -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Code/src/si4463.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Code/src/spi.o: ../Code/src/spi.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DSTM32 -DSTM32F1 -DSTM32F103C8Tx -DDEBUG -c -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/CMSIS/inc" -I"D:/Projects/ARM/!ELEPH/eleph/Firmware/CubeIDE/Code/inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Code/src/spi.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Code/src/ssd1306.o: ../Code/src/ssd1306.c

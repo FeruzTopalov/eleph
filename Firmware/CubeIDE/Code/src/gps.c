@@ -18,10 +18,12 @@
 #include "settings.h"
 #include "points.h"
 #include "lrns.h"
+#include "ubx.h"
 
 
 
 void gps_raw_convert_to_numerical(void);
+void send_ubx(uint8_t class, uint8_t id, uint8_t payload[], uint8_t len);
 
 
 
@@ -37,6 +39,7 @@ uint8_t parse_GSV(void);
 
 
 
+uint8_t ubx_message[64] = {0};
 char nmea_data[UART_BUF_LEN];
 struct gps_raw_struct gps_raw;
 struct gps_num_struct gps_num;
@@ -46,6 +49,56 @@ struct gps_num_struct gps_num;
 char tmp_char[15];
 uint8_t tmp_uint8;
 float tmp_float;
+
+
+
+void gps_init(void)
+{
+	//works for u-blox m8
+	uint8_t power_config[] = {0, 3, 0, 0, 0, 0, 0, 0};
+	uint8_t mode_config[] = {8, 1};
+	uint8_t sbas_config[] = {0, 1, 1, 0, 0, 0, 0, 0};
+	send_ubx(UBX_CLASS_CFG, UBX_CFG_SBAS, &sbas_config[0], sizeof(sbas_config));	//disable SBAS
+	send_ubx(UBX_CLASS_CFG, UBX_CFG_PMS, &power_config[0], sizeof(power_config));	//select power saving mode
+	send_ubx(UBX_CLASS_CFG, UBX_CFG_RXM, &mode_config[0], sizeof(mode_config));		//start power saving mode
+}
+
+
+
+void send_ubx(uint8_t class, uint8_t id, uint8_t payload[], uint8_t len)
+{
+	uint8_t CK_A = 0;
+	uint8_t CK_B = 0;
+
+	ubx_message[0] = UBX_SYNCH_1;
+	ubx_message[1] = UBX_SYNCH_2;
+	ubx_message[2] = class;
+	ubx_message[3] = id;
+	ubx_message[4] = len;
+	ubx_message[5] = 0;			//length under 255 bytes is expected
+
+	for (uint8_t i = 0; i < len; i++)
+	{
+		ubx_message[6 + i] = payload[i];	//copy
+	}
+
+	for (uint8_t m = 2; m < (len + 6); m++)
+	{
+		CK_A = CK_A + ubx_message[m];
+		CK_B = CK_B + CK_A;
+	}
+
+	ubx_message[6 + len] = CK_A;
+	ubx_message[6 + len + 1] = CK_B;
+
+	for (uint8_t n = 0; n < (len + 8); n++)
+	{
+		while (!(USART1->SR & USART_SR_TXE))	//wait for transmit register empty
+		{
+		}
+		USART1->DR = ubx_message[n];			//transmitt
+	}
+}
 
 
 

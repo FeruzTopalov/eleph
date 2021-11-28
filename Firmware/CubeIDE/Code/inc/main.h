@@ -21,12 +21,18 @@ struct main_flags_struct *get_main_flags(void);
 
 struct main_flags_struct
 {
-    uint8_t gps_ready;
-    uint8_t gps_sync;
-    uint8_t rx_ready;
+	//new
+	uint8_t nmea_ready;
+	uint8_t pps_exist;
+	uint8_t gps_valid;
+	uint8_t txrx_ready;
+
+	//old
+//    uint8_t gps_sync;
+    uint8_t tx_state;
+    uint8_t rx_packet_ready;
     uint8_t time_slots_end;
     uint8_t battery_low;
-    uint8_t act_status;
     uint8_t begin_scan_buttons;
     uint8_t tick_1s;
     uint8_t do_beep;

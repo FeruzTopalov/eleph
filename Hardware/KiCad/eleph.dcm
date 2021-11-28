@@ -1,0 +1,87 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP 0.96_OLED_SSD1306
+D 7-pin LCD module
+$ENDCMP
+#
+$CMP 8MHz
+D HC-49SM
+$ENDCMP
+#
+$CMP AO3400
+D 30V N-Channel MOSFET, SOT23
+$ENDCMP
+#
+$CMP AO3407A
+D 30V P-Channel MOSFET, SOT23
+$ENDCMP
+#
+$CMP Button
+D 6x6mm SMD tact switch
+$ENDCMP
+#
+$CMP Buzzer
+D Passive piezo buzzer, diameter 12mm, pitch 7.6mm
+$ENDCMP
+#
+$CMP C
+D Capacitor
+$ENDCMP
+#
+$CMP C_pol
+D Polarized capacitor
+$ENDCMP
+#
+$CMP Crystal_8MHz
+D HC-49SM
+$ENDCMP
+#
+$CMP GN-801
+D Ublox M8N-based GNSS receiver
+$ENDCMP
+#
+$CMP Led_green
+D smd, 1206 imperial
+$ENDCMP
+#
+$CMP Led_red
+D smd, 1206 imperial
+$ENDCMP
+#
+$CMP M24C64WMN
+D 64-Kbit serial I2C bus EEPROM
+$ENDCMP
+#
+$CMP PLS-1x6
+D PLS pin header
+$ENDCMP
+#
+$CMP Pad_oval
+D SMT pad with plated hole
+$ENDCMP
+#
+$CMP Pad_round
+D SMT pad
+$ENDCMP
+#
+$CMP R
+D Resistor
+$ENDCMP
+#
+$CMP RFM9X
+D HopeRF radio module
+$ENDCMP
+#
+$CMP STM32F103C8T6
+D 32-bit ARM Cortex-M3, 64KB Flash, 20KB SRAM, LQFP-48
+$ENDCMP
+#
+$CMP TP4056
+D Li-Ion battery charger module with protection, USB-Micro
+$ENDCMP
+#
+$CMP TPS73633DBV
+D 3.3V fixed 400-mA Low-Dropout Regulator in SOT-23-5
+$ENDCMP
+#
+#End Doc Library

@@ -11,7 +11,9 @@
 #include "main.h"
 #include "settings.h"
 #include "m24c64.h"
-#include "si4463.h"
+#include "rfm98.h"
+#include "points.h"
+#include "lrns.h"
 
 
 #define SEND_INTERVAL_1S_VALUE		(1)
@@ -28,14 +30,14 @@
 
 
 
-#define TX_POWER_10MILLIW_VALUE   (10)
-#define TX_POWER_25MILLIW_VALUE   (25)
-#define TX_POWER_40MILLIW_VALUE   (40)
-#define TX_POWER_100MILLIW_VALUE  (100)
+#define TX_POWER_1MILLIW_VALUE   	(1)
+#define TX_POWER_10MILLIW_VALUE   	(10)
+#define TX_POWER_50MILLIW_VALUE   	(50)
+#define TX_POWER_100MILLIW_VALUE  	(100)
 
-#define TX_POWER_VALUES_ARRAY 		{ 	TX_POWER_10MILLIW_VALUE, 	\
-										TX_POWER_25MILLIW_VALUE, 	\
-										TX_POWER_40MILLIW_VALUE, 	\
+#define TX_POWER_VALUES_ARRAY 		{ 	TX_POWER_1MILLIW_VALUE, 	\
+										TX_POWER_10MILLIW_VALUE, 	\
+										TX_POWER_50MILLIW_VALUE, 	\
 										TX_POWER_100MILLIW_VALUE	}
 
 
@@ -46,16 +48,18 @@
 //positions:
 #define SETTINGS_INIT_FLAG_POS          	(0)
 #define SETTINGS_DEVICE_NUMBER_POS      	(1)
-#define SETTINGS_DEVICE_ID_POS          	(2)
-#define SETTINGS_FREQ_CHANNEL_POS       	(4)
-#define SETTINGS_TX_POWER_POS           	(5)
-#define SETTINGS_SEND_INTERVAL_POS        	(6)
-#define SETTINGS_TIMEOUT_THRESHOLD_POS   	(7)
-#define SETTINGS_FENCE_THRESHOLD_POS   		(9)
+#define SETTINGS_DEVICES_ON_AIR_POS			(2)
+#define SETTINGS_DEVICE_ID_POS          	(3)
+#define SETTINGS_FREQ_CHANNEL_POS       	(5)
+#define SETTINGS_TX_POWER_POS           	(6)
+#define SETTINGS_SEND_INTERVAL_POS        	(7)
+#define SETTINGS_TIMEOUT_THRESHOLD_POS   	(8)
+#define SETTINGS_FENCE_THRESHOLD_POS   		(10)
 
 //default values:
 #define SETTINGS_INIT_FLAG_DEFAULT      	(0xAA)
 #define SETTINGS_DEVICE_NUMBER_DEFAULT  	(1)
+#define SETTINGS_DEVICES_ON_AIR_DEFAULT		(DEVICES_IN_GROUP)
 #define SETTINGS_DEVICE_ID_0_DEFAULT    	('I')
 #define SETTINGS_DEVICE_ID_1_DEFAULT    	('D')
 #define SETTINGS_FREQ_CHANNEL_DEFAULT   	(1)             //base freq is 433.050 and freq step is 25kHz, so CH0 - 433.050 (not valid, not used); CH1 - 433.075 (first LPD channel)
@@ -107,6 +111,7 @@ void settings_load(void)
     
     //load settings to struct
     settings.device_number = 					settings_array[SETTINGS_DEVICE_NUMBER_POS];
+    settings.devices_on_air = 					settings_array[SETTINGS_DEVICES_ON_AIR_POS];
     settings.device_id[0] = 					settings_array[SETTINGS_DEVICE_ID_POS];
     settings.device_id[1] = 					settings_array[SETTINGS_DEVICE_ID_POS + 1];
     settings.freq_channel = 					settings_array[SETTINGS_FREQ_CHANNEL_POS];
@@ -130,6 +135,7 @@ void settings_save_default(void)
     //assign default values
     settings_array[SETTINGS_INIT_FLAG_POS] = 			SETTINGS_INIT_FLAG_DEFAULT;
     settings_array[SETTINGS_DEVICE_NUMBER_POS] = 		SETTINGS_DEVICE_NUMBER_DEFAULT;
+    settings_array[SETTINGS_DEVICES_ON_AIR_POS] = 		SETTINGS_DEVICES_ON_AIR_DEFAULT;
     settings_array[SETTINGS_DEVICE_ID_POS] = 			SETTINGS_DEVICE_ID_0_DEFAULT;
     settings_array[SETTINGS_DEVICE_ID_POS + 1] = 		SETTINGS_DEVICE_ID_1_DEFAULT;
     settings_array[SETTINGS_FREQ_CHANNEL_POS] = 		SETTINGS_FREQ_CHANNEL_DEFAULT;
@@ -156,6 +162,7 @@ void settings_save(struct settings_struct *p_settings)
     //assign values
     settings_array[SETTINGS_INIT_FLAG_POS] = 			SETTINGS_INIT_FLAG_DEFAULT;
     settings_array[SETTINGS_DEVICE_NUMBER_POS] = 		p_settings->device_number;
+    settings_array[SETTINGS_DEVICES_ON_AIR_POS] =		p_settings->devices_on_air;
     settings_array[SETTINGS_DEVICE_ID_POS] = 			p_settings->device_id[0];
     settings_array[SETTINGS_DEVICE_ID_POS + 1] = 		p_settings->device_id[1];
     settings_array[SETTINGS_FREQ_CHANNEL_POS] = 		p_settings->freq_channel;
