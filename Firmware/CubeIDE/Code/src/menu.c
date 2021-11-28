@@ -25,13 +25,13 @@
 #include "gps.h"
 #include "points.h"
 #include "lrns.h"
-#include "si4463.h"
+#include "rfm98.h"
 #include "timer.h"
 
 
 
-char *FW_VERSION = "2.0";	//firmware
-char *HW_VERSION = "1";		//hardware
+char *FW_VERSION = "1.0";	//firmware
+char *HW_VERSION = "2";		//hardware
 
 
 
@@ -47,7 +47,7 @@ char *HW_VERSION = "1";		//hardware
 #define POINT_NAME_FIRST_SYMBOL      (' ')
 #define POINT_NAME_LAST_SYMBOL       ('~')
 
-#define TX_POWER_FIRST_OPTION       (TX_POWER_10MILLIW_SETTING)
+#define TX_POWER_FIRST_OPTION       (TX_POWER_1MILLIW_SETTING)
 #define TX_POWER_LAST_OPTION        (TX_POWER_100MILLIW_SETTING)
 
 #define SEND_INTERVAL_FIRST_OPTION       (SEND_INTERVAL_1S_SETTING)
@@ -85,6 +85,7 @@ void draw_main(void);
 void draw_devices(void);
 void draw_settings(void);
 void draw_info(void);
+void draw_power_off(void);
 void draw_edit_settings(void);
 void draw_set_dev_num(void);
 void draw_set_dev_id(void);
@@ -113,6 +114,7 @@ void draw_saved_popup(void);
 void set_dev_num_up(void);
 void set_dev_num_down(void);
 void set_dev_num_ok(void);
+void set_dev_num_ok_long(void);
 void set_dev_num_esc(void);
 void set_dev_id_up(void);
 void set_dev_id_down(void);
@@ -170,6 +172,7 @@ void save_device_as_ok(void);
 void save_device_as_ok_long(void);
 void save_device_as_esc(void);
 void saved_popup_esc(void);
+void power_off_ok(void);
 
 
 
@@ -202,7 +205,8 @@ enum
 	M_SET_FNC_THR,
     M_CONFIRM_SETTINGS_SAVE,
     M_RESTORE_DEFAULTS,
-    M_ERASE_ALL
+    M_ERASE_ALL,
+	M_POWER_OFF
 };
 
 
@@ -220,8 +224,9 @@ enum
 	M_MAIN_I_RADAR,
 	M_MAIN_I_POINTS,
     M_MAIN_I_SETTINGS,
-    M_MAIN_I_INFO,                  //last item
-    M_MAIN_I_LAST = M_MAIN_I_INFO   //copy last item here
+	M_MAIN_I_POWER_OFF,
+	M_MAIN_I_INFO,						//last item
+    M_MAIN_I_LAST = M_MAIN_I_INFO		//copy last item here
 };
 
 
@@ -311,6 +316,7 @@ const struct
     {M_SET_DEV_NUM,             BTN_UP,                 set_dev_num_up},
     {M_SET_DEV_NUM,             BTN_DOWN,               set_dev_num_down},
     {M_SET_DEV_NUM,             BTN_OK,                 set_dev_num_ok},
+	{M_SET_DEV_NUM,             BTN_OK_LONG,            set_dev_num_ok_long},
     {M_SET_DEV_NUM,             BTN_ESC,                set_dev_num_esc},
     {M_SET_DEV_ID,              BTN_UP,                 set_dev_id_up},
     {M_SET_DEV_ID,              BTN_DOWN,               set_dev_id_down},
@@ -341,6 +347,7 @@ const struct
     {M_CONFIRM_SETTINGS_SAVE,   BTN_ESC,                confirm_settings_save_esc},
     {M_RESTORE_DEFAULTS,        BTN_OK,                 restore_defaults_ok},
     {M_ERASE_ALL,               BTN_OK,                 erase_all_ok},
+	{M_POWER_OFF,               BTN_OK,                 power_off_ok},
     {0, 0, 0}   //end marker
 };
 
@@ -360,6 +367,7 @@ const struct
 	{M_MAIN,                    M_MAIN_I_POINTS,           		M_POINTS},
     {M_MAIN,                    M_MAIN_I_SETTINGS,          	M_SETTINGS},
     {M_MAIN,                    M_MAIN_I_INFO,              	M_INFO},
+	{M_MAIN,                    M_MAIN_I_POWER_OFF,            	M_POWER_OFF},
 	{M_EACH_DEVICE_SUBMENU,		M_EACH_DEVICE_SUBMENU_I_SAVE,	M_SAVE_DEVICE},
 	{M_EACH_DEVICE_SUBMENU,		M_EACH_DEVICE_SUBMENU_I_DELETE,	M_DELETE_DEVICE},
 	{M_EACH_POINT,				M_EACH_POINT_I_LOAD,			M_LOAD_POINT},
@@ -400,6 +408,7 @@ const struct
     {M_EDIT_SETTINGS,           M_CONFIRM_SETTINGS_SAVE},
     {M_RESTORE_DEFAULTS,        M_SETTINGS},
     {M_ERASE_ALL,               M_SETTINGS},
+	{M_POWER_OFF,            	M_MAIN},
     {0, 0}      //end marker
 };
 
@@ -459,6 +468,7 @@ const struct
     {M_CONFIRM_SETTINGS_SAVE,   draw_confirm_settings_save},
     {M_RESTORE_DEFAULTS,        draw_restore_defaults},
     {M_ERASE_ALL,               draw_erase_all},
+	{M_POWER_OFF,				draw_power_off},
     {0, 0}      //end marker
 };
 
@@ -488,6 +498,7 @@ uint32_t tmpui32;                                   //temporary uint32
 int16_t tmpi16;                                     //temporary int16
 uint8_t flag_settings_changed = 0;                  //is settings changed?
 uint8_t device_id_current_symbol = 0;               //current editing symbol in device_id[]
+uint8_t device_num_current_selection = 0;			//what is currently editing: "dev num" (0) or "devices on air" (1)
 
 
 
@@ -503,7 +514,7 @@ uint8_t current_device_to_load = 0;
 uint8_t current_slot_to_load = MEMORY_SLOT_FIRST;	//currently selected point slot in points menu
 uint8_t current_slot_to_save = 0;
 uint8_t point_to_save_list[MEMORY_SLOTS_TOTAL + 1];
-uint8_t device_to_load_list[DEVICES_IN_GROUP + 1]; //todo: why DEVICES_IN_GROUP + 1 ??? should be DEVICES_IN_GROUP
+uint8_t device_to_load_list[DEVICES_IN_GROUP + 1];
 uint8_t radar_list[DEVICES_IN_GROUP + 1]; 			//list of devices in radar menu, 5 devices total (because of except me); radar_list[device_number] = item; items start from 0
 uint8_t radar_list_hide[DEVICES_IN_GROUP + 1];		//if == 1 then hide device cross on the radar screen
 uint8_t device_number;								//this device number
@@ -537,8 +548,7 @@ void init_menu(void)
 	p_get_tx_power_values = get_tx_power_values();
 
     //init variables
-    current_each_device = device_number;   //set me as current
-
+    current_each_device = device_number;   //set me current
     current_menu = M_MAIN;
     set_current_item(M_MAIN_I_DEVICES);
 }
@@ -596,7 +606,7 @@ void change_menu(uint8_t button_code)
 					break;
 			}
     	}
-    	else if (button_code == BTN_PWR)	//if lcd is off then check for PRW button was pressed. If so - toggle the lcd
+    	else if (button_code == BTN_PWR_LONG)	//if lcd is off then check for PRW button was pressed. If so - toggle the lcd
     	{
     		ssd1306_toggle_display();
     	}
@@ -784,7 +794,8 @@ void draw_main(void)
     ssd1306_print(MAIN_ROW + 1, MAIN_COL, "Radar", 0);
     ssd1306_print(MAIN_ROW + 2, MAIN_COL, "Points", 0);
     ssd1306_print(MAIN_ROW + 3, MAIN_COL, "Settings", 0);
-    ssd1306_print(MAIN_ROW + 4, MAIN_COL, "Info", 0);
+    ssd1306_print(MAIN_ROW + 4, MAIN_COL, "Powerdown", 0);
+    ssd1306_print(MAIN_ROW + 5, MAIN_COL, "Info", 0);
     ssd1306_print(MAIN_ROW + get_current_item(), MAIN_COL - 1, ">", 0);
 
     ssd1306_char_pos(0, 20, SYMB_NOTE, 0);
@@ -805,7 +816,7 @@ void draw_devices(void)
     ssd1306_bitmap(&devices_blank[0]);
     
     //TRX
-    if (get_main_flags()->gps_sync && p_gps_num->status == GPS_DATA_VALID)
+    if (get_main_flags()->pps_exist && get_main_flags()->gps_valid)
     {
         ssd1306_char_pos(0, 18, SYMB_ARROW_UP, 0);
         ssd1306_char_pos(0, 19, SYMB_ARROW_DOWN, 0);
@@ -1106,7 +1117,7 @@ void draw_each_device(void)
     
 
     //TRX
-    if (get_main_flags()->gps_sync && p_gps_num->status == GPS_DATA_VALID)
+    if (get_main_flags()->pps_exist && get_main_flags()->gps_valid)
     {
         ssd1306_char_pos(0, icon_col--, SYMB_ARROW_DOWN, 0);
         ssd1306_char_pos(0, icon_col--, SYMB_ARROW_UP, 0);
@@ -1136,7 +1147,7 @@ void draw_each_device(void)
         ssd1306_char_pos(0, 3, p_settings->device_id[0], 0);
         ssd1306_char_pos(0, 4, p_settings->device_id[1], 0);
         
-        ssd1306_print(0, 6, "(me)", 0);
+        ssd1306_print(0, 6, "[Me]", 0);
         
         ssd1306_char_pos(1, 0, p_gps_raw->date[0], 0);
         ssd1306_char_pos(1, 1, p_gps_raw->date[1], 0);
@@ -1482,7 +1493,7 @@ void draw_each_device_submenu(void)
 
 	ssd1306_clear();
 
-	ssd1306_print(0, EACH_DEV_SM_COL, "DEVICE", 0);
+	ssd1306_print(0, EACH_DEV_SM_COL, "Device", 0);
 
 	ssd1306_print(0, EACH_DEV_SM_COL + 7, "#", 0);
     itoa32(current_each_device, &buf[0]);
@@ -1503,28 +1514,27 @@ void draw_each_device_submenu(void)
 void draw_delete_device(void)
 {
     ssd1306_clear();
-    ssd1306_print(0, 1, "Delete device", 0);
-
-	ssd1306_print(0, 15, "#", 0);
-    itoa32(current_each_device, &buf[0]);
-    ssd1306_print(0, 16, &buf[0], 0);
-
-    ssd1306_char_pos(0, 18, pp_gps_air[current_each_device]->device_id[0], 0);
-    ssd1306_char_pos(0, 19, pp_gps_air[current_each_device]->device_id[1], 0);
-
-    ssd1306_print_next("?", 0);
-
 
     if (current_each_device == device_number)
     {
-    	ssd1306_print(3, 1, "Can't del yourself", 0);
+    	ssd1306_print(0, 1, "Can't Del Yourself", 0);
     }
     else
     {
-		ssd1306_print(3, 1, "OK - delete", 0);
+		ssd1306_print(0, 1, "Delete Device", 0);
+
+		ssd1306_print(0, 15, "#", 0);
+		itoa32(current_each_device, &buf[0]);
+		ssd1306_print(0, 16, &buf[0], 0);
+
+		ssd1306_char_pos(0, 18, pp_gps_air[current_each_device]->device_id[0], 0);
+		ssd1306_char_pos(0, 19, pp_gps_air[current_each_device]->device_id[1], 0);
+
+		ssd1306_print_next("?", 0);
+		ssd1306_print(3, 5, "OK - Delete", 0);
     }
 
-    ssd1306_print(4, 1, "ESC - cancel", 0);
+    ssd1306_print(4, 5, "ESC - Close", 0);
 
     ssd1306_update();
 }
@@ -1557,16 +1567,16 @@ void draw_save_device(void)
 
 	ssd1306_clear();
 
-	ssd1306_print(0, SAVE_DEVICE_COL, "Where to save", 0);
+	ssd1306_print(0, SAVE_DEVICE_COL, "Save", 0);
 
-	ssd1306_print(0, SAVE_DEVICE_COL + 14, "#", 0);
+	ssd1306_print(0, SAVE_DEVICE_COL + 5, "#", 0);
     itoa32(current_each_device, &buf[0]);
-    ssd1306_print(0, SAVE_DEVICE_COL + 15, &buf[0], 0);
+    ssd1306_print(0, SAVE_DEVICE_COL + 6, &buf[0], 0);
 
-    ssd1306_char_pos(0, SAVE_DEVICE_COL + 17, pp_gps_air[current_each_device]->device_id[0], 0);
-    ssd1306_char_pos(0, SAVE_DEVICE_COL + 18, pp_gps_air[current_each_device]->device_id[1], 0);
+    ssd1306_char_pos(0, SAVE_DEVICE_COL + 8, pp_gps_air[current_each_device]->device_id[0], 0);
+    ssd1306_char_pos(0, SAVE_DEVICE_COL + 9, pp_gps_air[current_each_device]->device_id[1], 0);
 
-    ssd1306_print_next("?", 0);
+    ssd1306_print_next(" As Point", 0);
 
     read_memory_slots();
 
@@ -1597,7 +1607,8 @@ void draw_save_device(void)
     }
     else
     {
-    	ssd1306_print(SAVE_DEVICE_ROW, SAVE_DEVICE_COL, "no empty slots", 0);
+    	ssd1306_print(SAVE_DEVICE_ROW + 1, SAVE_DEVICE_COL + 2, "Memory Is Full", 0);
+    	ssd1306_print(SAVE_DEVICE_ROW + 4, SAVE_DEVICE_COL + 4, "ESC - Close", 0);
     	current_slot_to_save = 0;
     }
 
@@ -1613,12 +1624,15 @@ void draw_save_device_as(void)
 	#define SAVE_DEV_AS_PARAM_COL           (11)
 
 	ssd1306_clear();
-	ssd1306_print(0, SAVE_DEV_AS_COL, "Set point name", 0);
+	ssd1306_print(0, SAVE_DEV_AS_COL, "Set Point Name", 0);
 
-	ssd1306_print(SAVE_DEV_AS_ROW, SAVE_DEV_AS_COL, "Name", 0);
+	ssd1306_print(SAVE_DEV_AS_ROW, SAVE_DEV_AS_COL, "Name:", 0);
 	ssd1306_print(SAVE_DEV_AS_ROW, SAVE_DEV_AS_PARAM_COL, point_to_save_name, 0);
 	ssd1306_print(SAVE_DEV_AS_ROW + 1, SAVE_DEV_AS_PARAM_COL + point_name_current_symbol, "^", 0);
-	ssd1306_print(SAVE_DEV_AS_ROW + 3, SAVE_DEV_AS_COL, "Long OK - save", 0);
+
+	ssd1306_print(SAVE_DEV_AS_ROW + 3, SAVE_DEV_AS_COL + 1, "Shrt OK - Carriage", 0);
+	ssd1306_print(SAVE_DEV_AS_ROW + 4, SAVE_DEV_AS_COL + 1, "Long OK - Save", 0);
+	ssd1306_print(SAVE_DEV_AS_ROW + 5, SAVE_DEV_AS_COL + 5, "ESC - Cancel", 0);
 	ssd1306_update();
 }
 
@@ -1627,7 +1641,8 @@ void draw_save_device_as(void)
 void draw_saved_popup(void)
 {
 	ssd1306_clear();
-	ssd1306_print(0, 1, "Saved!", 0);
+	ssd1306_print(2, 7, "Saved!", 0);
+	ssd1306_print(4, 5, "ESC - Close", 0);
 	ssd1306_update();
 }
 
@@ -1690,7 +1705,7 @@ void draw_radar(void)
     }
 
     //TRX
-    if (get_main_flags()->gps_sync && p_gps_num->status == GPS_DATA_VALID)
+    if (get_main_flags()->pps_exist && get_main_flags()->gps_valid)
     {
         ssd1306_char_pos(0, icon_col--, SYMB_ARROW_DOWN, 0);
         ssd1306_char_pos(0, icon_col--, SYMB_ARROW_UP, 0);
@@ -1996,7 +2011,7 @@ void draw_points(void)
 		}
 		else
 		{
-			ssd1306_print(POINTS_ROW + s - 1, POINTS_NAME_COL, "empty", 0);
+			ssd1306_print(POINTS_ROW + s - 1, POINTS_NAME_COL, "Empty", 0);
 		}
 	}
 
@@ -2014,7 +2029,7 @@ void draw_each_point(void)
 
     ssd1306_clear();
 
-	ssd1306_print(0, EACH_POINT_COL, "POINT ", 0);
+	ssd1306_print(0, EACH_POINT_COL, "Point ", 0);
 	ssd1306_print_next(pp_memory_slot[current_slot_to_load]->slot_name, 0);
 
 	ssd1306_print(EACH_POINT_ROW, EACH_POINT_COL, "Load", 0);
@@ -2033,7 +2048,7 @@ void draw_load_point(void)
 
 	ssd1306_clear();
 
-	ssd1306_print(0, LOAD_POINT_COL, "Where to load ", 0);
+	ssd1306_print(0, LOAD_POINT_COL, "Where To Load ", 0);
 	ssd1306_print_next(pp_memory_slot[current_slot_to_load]->slot_name, 0);
 	ssd1306_print_next("?", 0);
 
@@ -2068,7 +2083,8 @@ void draw_load_point(void)
     }
     else
     {
-    	ssd1306_print(LOAD_POINT_ROW, LOAD_POINT_COL, "no empty devices", 0);
+    	ssd1306_print(LOAD_POINT_ROW + 1, LOAD_POINT_COL + 2, "No Empty Devices", 0);
+    	ssd1306_print(LOAD_POINT_ROW + 4, LOAD_POINT_COL + 4, "ESC - Close", 0);
     	current_device_to_load = 0;
     }
 
@@ -2080,11 +2096,11 @@ void draw_load_point(void)
 void draw_delete_point(void)
 {
     ssd1306_clear();
-    ssd1306_print(0, 1, "Delete point ", 0);
+    ssd1306_print(0, 1, "Delete Point ", 0);
     ssd1306_print_next(pp_memory_slot[current_slot_to_load]->slot_name, 0);
     ssd1306_print_next("?", 0);
-    ssd1306_print(3, 1, "OK - delete", 0);
-    ssd1306_print(4, 1, "ESC - cancel", 0);
+    ssd1306_print(3, 4, "OK - Delete", 0);
+    ssd1306_print(4, 4, "ESC - Cancel", 0);
     ssd1306_update();
 }
 
@@ -2131,6 +2147,17 @@ void draw_info(void)
 
 
 
+//POWER OFF
+void draw_power_off(void)
+{
+    ssd1306_clear();
+    ssd1306_print(2, 0, "Press OK To Power OFF", 0);
+    ssd1306_print(4, 5, "ESC - Cancel", 0);
+    ssd1306_update();
+}
+
+
+
 //EDIT SETTINGS
 void draw_edit_settings(void)
 {
@@ -2139,11 +2166,14 @@ void draw_edit_settings(void)
     #define EDIT_SETTINGS_PARAM_COL         (15)
     
     ssd1306_clear();
-    ssd1306_print(0, EDIT_SETTINGS_COL + 1, "EDIT SETTINGS", 0);
+    ssd1306_print(0, EDIT_SETTINGS_COL + 2, "EDIT SETTINGS", 0);
     
-    ssd1306_print(EDIT_SETTINGS_ROW, EDIT_SETTINGS_COL, "Device number", 0);
+    ssd1306_print(EDIT_SETTINGS_ROW, EDIT_SETTINGS_COL, "Device Number", 0);
     itoa32(settings_copy.device_number, &buf[0]);
     ssd1306_print(EDIT_SETTINGS_ROW, EDIT_SETTINGS_PARAM_COL, &buf[0], 0);
+    ssd1306_print(EDIT_SETTINGS_ROW, EDIT_SETTINGS_PARAM_COL + 1, "/", 0);
+    itoa32(settings_copy.devices_on_air, &buf[0]);
+    ssd1306_print(EDIT_SETTINGS_ROW, EDIT_SETTINGS_PARAM_COL + 2, &buf[0], 0);
     
     ssd1306_print(EDIT_SETTINGS_ROW + 1, EDIT_SETTINGS_COL, "Device ID", 0);
     buf[0] = settings_copy.device_id[0];
@@ -2151,26 +2181,26 @@ void draw_edit_settings(void)
     buf[2] = 0;
     ssd1306_print(EDIT_SETTINGS_ROW + 1, EDIT_SETTINGS_PARAM_COL, &buf[0], 0);
     
-    ssd1306_print(EDIT_SETTINGS_ROW + 2, EDIT_SETTINGS_COL, "Freq channel", 0);
+    ssd1306_print(EDIT_SETTINGS_ROW + 2, EDIT_SETTINGS_COL, "Freq Channel", 0);
     itoa32(settings_copy.freq_channel, &buf[0]);
     ssd1306_print(EDIT_SETTINGS_ROW + 2, EDIT_SETTINGS_PARAM_COL, &buf[0], 0);
     
-    ssd1306_print(EDIT_SETTINGS_ROW + 3, EDIT_SETTINGS_COL, "TX power", 0);
+    ssd1306_print(EDIT_SETTINGS_ROW + 3, EDIT_SETTINGS_COL, "TX Power", 0);
     itoa32(p_get_tx_power_values[settings_copy.tx_power_opt], &buf[0]);
     ssd1306_print(EDIT_SETTINGS_ROW + 3, EDIT_SETTINGS_PARAM_COL, &buf[0], 0);
     ssd1306_print_next(" mW", 0);
     
-    ssd1306_print(EDIT_SETTINGS_ROW + 4, EDIT_SETTINGS_COL, "Send interval", 0);
+    ssd1306_print(EDIT_SETTINGS_ROW + 4, EDIT_SETTINGS_COL, "Send Interval", 0);
     itoa32(p_send_interval_values[settings_copy.send_interval_opt], &buf[0]);
     ssd1306_print(EDIT_SETTINGS_ROW + 4, EDIT_SETTINGS_PARAM_COL, &buf[0], 0);
     ssd1306_print_next(" s", 0);
 
-    ssd1306_print(EDIT_SETTINGS_ROW + 5, EDIT_SETTINGS_COL, "Timeout thr", 0);
+    ssd1306_print(EDIT_SETTINGS_ROW + 5, EDIT_SETTINGS_COL, "Timeout", 0);
     itoa32(settings_copy.timeout_threshold.as_integer, &buf[0]);
     ssd1306_print(EDIT_SETTINGS_ROW + 5, EDIT_SETTINGS_PARAM_COL, &buf[0], 0);
     ssd1306_print_next(" s", 0);
 
-    ssd1306_print(EDIT_SETTINGS_ROW + 6, EDIT_SETTINGS_COL, "Fence thr", 0);
+    ssd1306_print(EDIT_SETTINGS_ROW + 6, EDIT_SETTINGS_COL, "Geo-fence", 0);
     itoa32(settings_copy.fence_threshold.as_integer, &buf[0]);
     ssd1306_print(EDIT_SETTINGS_ROW + 6, EDIT_SETTINGS_PARAM_COL, &buf[0], 0);
     ssd1306_print_next(" m", 0);
@@ -2189,12 +2219,27 @@ void draw_set_dev_num(void)
     #define SET_DEV_NUM_PARAM_COL           (15)
     
     ssd1306_clear();
-    ssd1306_print(0, SET_DEV_NUM_COL, "SET DEV NUM", 0);
+    ssd1306_print(0, SET_DEV_NUM_COL, "Set Device Number", 0);
     
-    ssd1306_print(SET_DEV_NUM_ROW, SET_DEV_NUM_COL, "Device number", 0);
+    ssd1306_print(SET_DEV_NUM_ROW, SET_DEV_NUM_COL, "Device Number", 0);
     itoa32(settings_copy.device_number, &buf[0]);
     ssd1306_print(SET_DEV_NUM_ROW, SET_DEV_NUM_PARAM_COL, &buf[0], 0);
-    ssd1306_print(SET_DEV_NUM_ROW + 1, SET_DEV_NUM_PARAM_COL, "^", 0);
+    ssd1306_print(SET_DEV_NUM_ROW, SET_DEV_NUM_PARAM_COL + 1, " of ", 0);
+    itoa32(settings_copy.devices_on_air, &buf[0]);
+    ssd1306_print(SET_DEV_NUM_ROW, SET_DEV_NUM_PARAM_COL + 5, &buf[0], 0);
+
+    if (device_num_current_selection == 0)
+    {
+    	ssd1306_print(SET_DEV_NUM_ROW + 1, SET_DEV_NUM_PARAM_COL, "^", 0);
+    }
+    else
+    {
+    	ssd1306_print(SET_DEV_NUM_ROW + 1, SET_DEV_NUM_PARAM_COL + 5, "^", 0);
+    }
+
+    ssd1306_print(SET_DEV_NUM_ROW + 3, SET_DEV_NUM_COL + 1, "Shrt OK - Carriage", 0);
+    ssd1306_print(SET_DEV_NUM_ROW + 4, SET_DEV_NUM_COL + 1, "Long OK - Apply", 0);
+    ssd1306_print(SET_DEV_NUM_ROW + 5, SET_DEV_NUM_COL + 5, "ESC - Cancel", 0);
     ssd1306_update();
 }
 
@@ -2208,15 +2253,17 @@ void draw_set_dev_id(void)
     #define SET_DEV_ID_PARAM_COL           (15)
     
     ssd1306_clear();
-    ssd1306_print(0, SET_DEV_NUM_COL, "SET DEV ID", 0);
+    ssd1306_print(0, SET_DEV_NUM_COL, "Set Device ID", 0);
     
-    ssd1306_print(SET_DEV_ID_ROW, SET_DEV_ID_COL, "Device ID", 0);
+    ssd1306_print(SET_DEV_ID_ROW, SET_DEV_ID_COL, "Device ID:", 0);
     buf[0] = settings_copy.device_id[0];
     buf[1] = settings_copy.device_id[1];
     buf[2] = 0;
     ssd1306_print(SET_DEV_ID_ROW, SET_DEV_ID_PARAM_COL, &buf[0], 0);
     ssd1306_print(SET_DEV_ID_ROW + 1, SET_DEV_ID_PARAM_COL + device_id_current_symbol, "^", 0);
-    ssd1306_print(SET_DEV_ID_ROW + 3, SET_DEV_ID_COL, "Long OK - apply", 0);
+    ssd1306_print(SET_DEV_ID_ROW + 3, SET_DEV_ID_COL + 1, "Shrt OK - Carriage", 0);
+    ssd1306_print(SET_DEV_ID_ROW + 4, SET_DEV_ID_COL + 1, "Long OK - Apply", 0);
+    ssd1306_print(SET_DEV_ID_ROW + 5, SET_DEV_ID_COL + 5, "ESC - Cancel", 0);
     ssd1306_update();
 }
 
@@ -2227,15 +2274,18 @@ void draw_set_freq_ch(void)
 {
     #define SET_FREQ_CH_ROW         (2)
     #define SET_FREQ_CH_COL         (1)
-    #define SET_FREQ_CH_PARAM_COL   (16)
+    #define SET_FREQ_CH_PARAM_COL   (18)
     
     ssd1306_clear();
-    ssd1306_print(0, SET_FREQ_CH_COL, "SET FREQ CH", 0);
+    ssd1306_print(0, SET_FREQ_CH_COL, "Set Freq Channel", 0);
     
-    ssd1306_print(SET_FREQ_CH_ROW, SET_FREQ_CH_COL, "Freq channel", 0);
+    ssd1306_print(SET_FREQ_CH_ROW, SET_FREQ_CH_COL, "LPD433 Channel:", 0);
     itoa32(settings_copy.freq_channel, &buf[0]);
-    ssd1306_print_viceversa(SET_FREQ_CH_ROW, SET_FREQ_CH_PARAM_COL, &buf[0], 0);
+    ssd1306_print(SET_FREQ_CH_ROW, SET_FREQ_CH_PARAM_COL, &buf[0], 0);
     ssd1306_print(SET_FREQ_CH_ROW + 1, SET_FREQ_CH_PARAM_COL, "^", 0);
+
+    ssd1306_print(SET_FREQ_CH_ROW + 4, SET_FREQ_CH_COL + 3, "OK - Apply", 0);
+    ssd1306_print(SET_FREQ_CH_ROW + 5, SET_FREQ_CH_COL + 3, "ESC - Cancel", 0);
     ssd1306_update();
 }
 
@@ -2249,13 +2299,16 @@ void draw_set_tx_pow(void)
     #define SET_TX_POW_PARAM_COL    (15)
     
     ssd1306_clear();
-    ssd1306_print(0, SET_TX_POW_COL, "SET TX POW", 0);
+    ssd1306_print(0, SET_TX_POW_COL, "Set TX Power", 0);
     
-    ssd1306_print(SET_TX_POW_ROW, SET_TX_POW_COL, "TX power", 0);
+    ssd1306_print(SET_TX_POW_ROW, SET_TX_POW_COL, "TX Power:", 0);
     itoa32(p_get_tx_power_values[settings_copy.tx_power_opt], &buf[0]);
     ssd1306_print(SET_TX_POW_ROW, SET_TX_POW_PARAM_COL, &buf[0], 0);
     ssd1306_print_next(" mW", 0);
     ssd1306_print(SET_TX_POW_ROW + 1, SET_TX_POW_PARAM_COL, "^", 0);
+
+    ssd1306_print(SET_TX_POW_ROW + 4, SET_TX_POW_COL + 3, "OK - Apply", 0);
+    ssd1306_print(SET_TX_POW_ROW + 5, SET_TX_POW_COL + 3, "ESC - Cancel", 0);
     ssd1306_update();
 }
 
@@ -2266,16 +2319,19 @@ void draw_set_send_intvl(void)
 {
     #define SET_SEND_INTVL_ROW                 (2)
     #define SET_SEND_INTVL_COL                 (1)
-    #define SET_SEND_INTVL_PARAM_COL           (16)
+    #define SET_SEND_INTVL_PARAM_COL           (17)
 
     ssd1306_clear();
-    ssd1306_print(0, SET_SEND_INTVL_COL, "SET SEND INTVL", 0);
+    ssd1306_print(0, SET_SEND_INTVL_COL, "Set Send Interval", 0);
 
-    ssd1306_print(SET_SEND_INTVL_ROW, SET_SEND_INTVL_COL, "Send interval", 0);
+    ssd1306_print(SET_SEND_INTVL_ROW, SET_SEND_INTVL_COL, "Send Interval:", 0);
     itoa32(p_send_interval_values[settings_copy.send_interval_opt], &buf[0]);
     ssd1306_print(SET_SEND_INTVL_ROW, SET_SEND_INTVL_PARAM_COL, &buf[0], 0);
     ssd1306_print_next(" s", 0);
     ssd1306_print(SET_SEND_INTVL_ROW + 1, SET_SEND_INTVL_PARAM_COL, "^", 0);
+
+    ssd1306_print(SET_SEND_INTVL_ROW + 4, SET_SEND_INTVL_COL + 3, "OK - Apply", 0);
+    ssd1306_print(SET_SEND_INTVL_ROW + 5, SET_SEND_INTVL_COL + 3, "ESC - Cancel", 0);
     ssd1306_update();
 }
 
@@ -2289,13 +2345,16 @@ void draw_set_to_thr(void)
     #define SET_TO_THR_PARAM_COL           (14)
 
     ssd1306_clear();
-    ssd1306_print(0, SET_TO_THR_COL, "SET TO THR", 0);
+    ssd1306_print(0, SET_TO_THR_COL, "Set Timeout Thres", 0);
 
-    ssd1306_print(SET_TO_THR_ROW, SET_TO_THR_COL, "Timeout thr", 0);
+    ssd1306_print(SET_TO_THR_ROW, SET_TO_THR_COL, "Timeout:", 0);
     itoa32(settings_copy.timeout_threshold.as_integer, &buf[0]);
     ssd1306_print(SET_TO_THR_ROW, SET_TO_THR_PARAM_COL, &buf[0], 0);
     ssd1306_print_next(" s", 0);
     ssd1306_print(SET_TO_THR_ROW + 1, SET_TO_THR_PARAM_COL, "^", 0);
+
+    ssd1306_print(SET_TO_THR_ROW + 4, SET_TO_THR_COL + 3, "OK - Apply", 0);
+    ssd1306_print(SET_TO_THR_ROW + 5, SET_TO_THR_COL + 3, "ESC - Cancel", 0);
     ssd1306_update();
 }
 
@@ -2309,13 +2368,16 @@ void draw_set_fnc_thr(void)
     #define SET_FNC_THR_PARAM_COL           (14)
 
     ssd1306_clear();
-    ssd1306_print(0, SET_FNC_THR_COL, "SET FNC THR", 0);
+    ssd1306_print(0, SET_FNC_THR_COL, "Set Fence Thres", 0);
 
-    ssd1306_print(SET_FNC_THR_ROW, SET_FNC_THR_COL, "Fence thr", 0);
+    ssd1306_print(SET_FNC_THR_ROW, SET_FNC_THR_COL, "Geo-fence:", 0);
     itoa32(settings_copy.fence_threshold.as_integer, &buf[0]);
     ssd1306_print(SET_FNC_THR_ROW, SET_FNC_THR_PARAM_COL, &buf[0], 0);
     ssd1306_print_next(" m", 0);
     ssd1306_print(SET_FNC_THR_ROW + 1, SET_FNC_THR_PARAM_COL, "^", 0);
+
+    ssd1306_print(SET_FNC_THR_ROW + 4, SET_FNC_THR_COL + 3, "OK - Apply", 0);
+    ssd1306_print(SET_FNC_THR_ROW + 5, SET_FNC_THR_COL + 3, "ESC - Cancel", 0);
     ssd1306_update();
 }
 
@@ -2327,9 +2389,9 @@ void draw_confirm_settings_save(void)
     if (flag_settings_changed)
     {
         ssd1306_clear();
-        ssd1306_print(0, 1, "Settings changed", 0);
-        ssd1306_print(3, 1, "OK - save & restart", 0);
-        ssd1306_print(4, 1, "ESC - cancel changes", 0);
+        ssd1306_print(0, 3, "Settings Changed", 0);
+        ssd1306_print(4, 1, "OK - Save & Restart", 0);
+        ssd1306_print(5, 1, "ESC - Cancel Changes", 0);
         ssd1306_update();
     }
     else
@@ -2345,9 +2407,9 @@ void draw_confirm_settings_save(void)
 void draw_restore_defaults(void)
 {
     ssd1306_clear();
-    ssd1306_print(0, 1, "Restore defaults?", 0);
-    ssd1306_print(3, 1, "OK - restore & reset", 0);
-    ssd1306_print(4, 1, "ESC - cancel", 0);
+    ssd1306_print(0, 1, "Restore Defaults?", 0);
+    ssd1306_print(4, 1, "OK - Restore & Reset", 0);
+    ssd1306_print(5, 1, "ESC - Cancel", 0);
     ssd1306_update();
 }
 
@@ -2357,9 +2419,9 @@ void draw_restore_defaults(void)
 void draw_erase_all(void)
 {
     ssd1306_clear();
-    ssd1306_print(0, 1, "Erase all EEPROM?", 0);
-    ssd1306_print(3, 1, "OK - erase & reset", 0);
-    ssd1306_print(4, 1, "ESC - cancel", 0);
+    ssd1306_print(0, 1, "Erase All EEPROM?", 0);
+    ssd1306_print(4, 1, "OK - Erase & Reset", 0);
+    ssd1306_print(5, 1, "ESC - Cancel", 0);
     ssd1306_update();
 }
 
@@ -2781,13 +2843,32 @@ void delete_point_ok(void)
 
 void set_dev_num_up(void)
 {
-    if (settings_copy.device_number == DEVICE_NUMBER_LAST)
+	if (device_num_current_selection == 0)
+	{
+		if (settings_copy.device_number == settings_copy.devices_on_air)
+		{
+			settings_copy.device_number = DEVICE_NUMBER_FIRST;
+		}
+		else
+		{
+			settings_copy.device_number++;
+		}
+	}
+	else
+	{
+		if (settings_copy.devices_on_air == DEVICE_NUMBER_LAST)
+		{
+			settings_copy.devices_on_air = DEVICE_NUMBER_FIRST + 1;
+		}
+		else
+		{
+			settings_copy.devices_on_air++;
+		}
+	}
+
+    if (settings_copy.device_number > settings_copy.devices_on_air)
     {
-        settings_copy.device_number = DEVICE_NUMBER_FIRST;
-    }
-    else
-    {
-        settings_copy.device_number++;
+    	settings_copy.device_number = settings_copy.devices_on_air;
     }
 
     draw_current_menu();
@@ -2797,13 +2878,32 @@ void set_dev_num_up(void)
 
 void set_dev_num_down(void)
 {
-    if (settings_copy.device_number == DEVICE_NUMBER_FIRST)
+	if (device_num_current_selection == 0)
+	{
+		if (settings_copy.device_number == DEVICE_NUMBER_FIRST)
+		{
+			settings_copy.device_number = settings_copy.devices_on_air;
+		}
+		else
+		{
+			settings_copy.device_number--;
+		}
+	}
+	else
+	{
+		if (settings_copy.devices_on_air == DEVICE_NUMBER_FIRST + 1)
+		{
+			settings_copy.devices_on_air = DEVICE_NUMBER_LAST;
+		}
+		else
+		{
+			settings_copy.devices_on_air--;
+		}
+	}
+
+    if (settings_copy.device_number > settings_copy.devices_on_air)
     {
-        settings_copy.device_number = DEVICE_NUMBER_LAST;
-    }
-    else
-    {
-        settings_copy.device_number--;
+    	settings_copy.device_number = settings_copy.devices_on_air;
     }
     
     draw_current_menu();
@@ -2813,11 +2913,23 @@ void set_dev_num_down(void)
 
 void set_dev_num_ok(void)
 {
-    if (settings_copy.device_number != device_number)
+    if (++device_num_current_selection == 2)	//
+    {
+    	device_num_current_selection = 0;
+    }
+    
+    draw_current_menu();
+}
+
+
+
+void set_dev_num_ok_long(void)
+{
+    if ((settings_copy.device_number != device_number) | (settings_copy.devices_on_air != p_settings->devices_on_air))
     {
         flag_settings_changed = 1;
     }
-    
+
     current_menu = M_EDIT_SETTINGS;
     draw_current_menu();
 }
@@ -2827,6 +2939,7 @@ void set_dev_num_ok(void)
 void set_dev_num_esc(void)
 {
     settings_copy.device_number = device_number;   //exit no save, reset value
+    settings_copy.devices_on_air = p_settings->devices_on_air;
     current_menu = M_EDIT_SETTINGS;
     draw_current_menu();
 }
@@ -2835,7 +2948,11 @@ void set_dev_num_esc(void)
 
 void confirm_settings_save_ok(void)
 {
+    ssd1306_clear();
+    ssd1306_print(3, 7, "Wait...", 0);
+    ssd1306_update();
     settings_save(&settings_copy);
+    delay_cyc(200000);
     NVIC_SystemReset();
 }
 
@@ -3192,7 +3309,11 @@ void confirm_settings_save_esc(void)
 
 void restore_defaults_ok(void)
 {
+    ssd1306_clear();
+    ssd1306_print(3, 7, "Wait...", 0);
+    ssd1306_update();
     settings_save_default();
+    delay_cyc(200000);
     NVIC_SystemReset();
 }
 
@@ -3201,8 +3322,17 @@ void restore_defaults_ok(void)
 void erase_all_ok(void)
 {
     ssd1306_clear();
-    ssd1306_print(0, 1, "WAIT...", 0);
+    ssd1306_print(3, 7, "Wait...", 0);
     ssd1306_update();
     m24c64_erase_all();
+    delay_cyc(200000);
     NVIC_SystemReset();
 }
+
+
+
+void power_off_ok(void)
+{
+	release_power();
+}
+

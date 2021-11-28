@@ -14,6 +14,7 @@
 
 
 
+void debug_message(char *message);
 void convert_timeout(uint32_t timeout_val, char *buffer);
 
 void delay_cyc(uint32_t cycles);

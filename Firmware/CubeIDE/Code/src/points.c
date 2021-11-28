@@ -19,17 +19,17 @@
 
 
 //positions:
-#define MEMORY_POINT_EXIST_FLAG_POS          	(0)
+#define MEMORY_POINT_EXIST_FLAG_POS         	(0)
 
-#define MEMORY_POINT_NAME_POS          		(1)
+#define MEMORY_POINT_NAME_POS          			(1)
 
 #define MEMORY_POINT_DAY_POS          			(6)
 #define MEMORY_POINT_MONTH_POS          		(8)
-#define MEMORY_POINT_YEAR_POS          		(10)
+#define MEMORY_POINT_YEAR_POS          			(10)
 
-#define MEMORY_POINT_LATITUDE_POS          	(12)
+#define MEMORY_POINT_LATITUDE_POS          		(12)
 #define MEMORY_POINT_LONGITUDE_POS          	(16)
-#define MEMORY_POINT_ALTITUDE_POS          	(20)
+#define MEMORY_POINT_ALTITUDE_POS          		(20)
 
 
 
@@ -42,18 +42,20 @@
 
 
 
-#define MEMORY_SLOT_1_NAME		("S1")
-#define MEMORY_SLOT_2_NAME		("S2")
-#define MEMORY_SLOT_3_NAME		("S3")
-#define MEMORY_SLOT_4_NAME		("S4")
-#define MEMORY_SLOT_5_NAME		("S5")
+#define MEMORY_SLOT_1_NAME		("P1")		//"P" stands for Point
+#define MEMORY_SLOT_2_NAME		("P2")
+#define MEMORY_SLOT_3_NAME		("P3")
+#define MEMORY_SLOT_4_NAME		("P4")
+#define MEMORY_SLOT_5_NAME		("P5")
+#define MEMORY_SLOT_6_NAME		("P6")
 
 #define MEMORY_SLOT_NAMES		{ 	"0", 					\
 									MEMORY_SLOT_1_NAME, 	\
 									MEMORY_SLOT_2_NAME, 	\
 									MEMORY_SLOT_3_NAME, 	\
 									MEMORY_SLOT_4_NAME, 	\
-									MEMORY_SLOT_5_NAME	}
+									MEMORY_SLOT_5_NAME,		\
+									MEMORY_SLOT_6_NAME}
 
 
 void clear_point_buffer(void);

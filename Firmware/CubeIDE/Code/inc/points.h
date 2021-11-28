@@ -15,7 +15,7 @@
 
 
 #define MEMORY_POINT_NAME_LENGTH   (5) //excluding string-end symbol \0
-#define MEMORY_SLOTS_TOTAL	(5)
+#define MEMORY_SLOTS_TOTAL	(6)
 
 
 

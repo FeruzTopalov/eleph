@@ -1,0 +1,5 @@
+(sym_lib_table
+  (lib (name eleph)(type Legacy)(uri ${KIPRJMOD}/eleph.lib)(options "")(descr ""))
+  (lib (name valenok)(type Legacy)(uri D:/Projects/AVR/Lera_Thermo/hardware/valenok/valenok.lib)(options "")(descr ""))
+  (lib (name eleph-rescue)(type Legacy)(uri ${KIPRJMOD}/eleph-rescue.lib)(options "")(descr "")(disabled))
+)
