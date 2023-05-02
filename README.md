@@ -1,5 +1,9 @@
 # **ELEPH** - _Never Get Lost!_
 
+> **Note**
+> Development of this device has been finished, only bug-fixes in the FW are possible
+> There is an improved version of this device being under development, please see <https://github.com/FeruzTopalov/spoke>
+
 <p align="center">
   <img src="Supplementary/Pictures/Eleph_logo.png" width="256" height="256">
 </p>
